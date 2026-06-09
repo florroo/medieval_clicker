@@ -1,0 +1,109 @@
+body {
+    text-align: center;
+    background-color: #ffffff;
+    color: rgb(22, 6, 6);
+    transition: 0.3s;
+    font-family: "UnifrakturCook", cursive;
+    position: relative;
+}
+
+.name, .github {
+    text-shadow: 0 0 5px purple;
+}
+
+body.dark .name, body.dark .github {
+    text-shadow: 0 0 5px white;
+}
+
+.click_upgrades {
+    display: flex;
+    justify-content: space-around;
+}
+
+.sps_upgrades {
+    display: flex;
+    justify-content: space-around;
+}
+
+body.font_default {
+    font-family: Arial, Helvetica, sans-serif
+}
+
+
+body.dark {
+    background-color: #000000;
+    color: bisque;
+}
+
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+
+h1 {
+    color: #747272;
+}
+
+
+.reset_btn {
+    color: red;
+}
+
+.options {
+    display: flex;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
+
+.buttons {
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.author_info {
+    font-size: 20px;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.author_info a {
+    color: purple;
+    text-decoration: none;
+}
+
+
+.floating-text {
+    position: absolute;
+    font-size: 35px;
+    color: gold;
+    font-weight: bold;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+    z-index: 9999; 
+}
+
+.floating-text.crit {
+    color: red !important;
+    font-size: 48px;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}

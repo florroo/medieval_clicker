@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medieval Clicker - {{ player.points }}</title>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <link rel="icon" href="{% static 'game/favicon.ico' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <h1>Just click and relax</h1>
+
+    <div class="main">
+        Szekle: <span id="points">{{ player.points }}</span><BR>
+
+        <button onclick="sendClick(event)">Kliknij mnie!</button> <BR>
+
+        <b> Obecnie masz <span id="points_per_click">{{ player.points_per_click }}</span> ppc 🗡</b> <BR>
+            w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 🎲
+            oraz moc kryta: <span id="crit_multiplier">x{{ player.crit_multiplier }}</span>🧨<BR>
+        <B>Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 🕰</B>
+    </div>
+
+
+    <hr>
+
+
+    <h3>Upgrade</h3>
+    <div class="upgrades">
+        <div class="click_upgrades">
+            <div class="click_upgrade">
+                <p>Lepszy klik (+1 do ppc 🗡): <span id="cost">{{ player.upgrade_cost }} szekli</span></p>
+
+                <button onclick="buyUpgrade()">Kup upgrade</button>
+            </div>
+
+
+            <div class="crit_upgrade">
+                <p>Wiekszy kryt (+1% 🎲): <span id="crit_chance_upgrade_cost">{{ player.crit_chance_upgrade_cost }} szekli</span></p>
+
+                <button onclick="buyCritUpgrade()">Kup kryta</button>
+            </div>
+
+
+            <div class="multiplier_upgrade">
+                <p>Mocniejszy kryt (+1x 🧨): <span id="crit_multiplier_upgrade_cost">{{ player.crit_multiplier_upgrade_cost }} szekli</span></p>
+
+                <button onclick="buyMultiplierUpgrade()">Kup mnoznik</button>
+            </div>
+
+
+        </div>
+
+
+        <div class="sps_upgrades">
+            <div class="horseman_upgrade">
+                <p>Stajenny (+1 do sps 🕰): <span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span></p>
+
+                <button onclick="buyAutoUpgrade()">Kup stajennego</button>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <hr>
+
+
+    <div class="options">
+        <div class="buttons">  
+            <h3>Opcje</h3>
+            
+            <button onclick="resetGame()" class="reset_btn">Resetuj progres</button>
+
+            <button id="music_btn" onclick="toggleMusic()">Włącz muzykę</button>
+
+            <button onclick="toggleMode()" class="toggle_btn" id="mode_btn"> Dark mode </button>
+
+            <button onclick="toggleFont()" class="font_btn" id="font_btn"> Default font </button>
+        </div>
+
+
+        <div class="author_info">        
+            <p class="name">Autor: © Florek Bartlomiej 2026</p>
+            <p class="github">Github: <a href="https://github.com/florroo">klik</a></p>
+        
+        </div>
+    </div>
+
+
+    <audio id="bg_music" loop>
+        <source src="{% static 'game/bg_music.mp3' %}" type="audio/mpeg">
+    </audio>
+
+    <audio id="upgrade_sound">
+        <source src="{% static 'game/upgrade.mp3' %}" type="audio/mpeg">
+    </audio>
+
+    <audio id="crit_sound">
+        <source src="{% static 'game/crit.mp3' %}" type="audio/mpeg">
+    </audio>
+    
+
+    <script src="{% static 'game/script.js' %}"></script>
+</body>
+</html>
+
+
