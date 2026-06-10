@@ -68,7 +68,148 @@ function buyUpgrade() {
     .then(data => {
         document.getElementById('points').innerText = data.points;
         document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_level').innerHTML = data.upgrade_level;
         document.getElementById('cost').innerText = data.upgrade_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyWoodenSwordUpgrade() {
+    fetch('/buy-wooden-sword/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_wooden_sword_level').innerHTML = data.upgrade_wooden_sword_level;
+        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyShortSwordUpgrade() {
+    fetch('/buy-short-sword/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_short_sword_level').innerHTML = data.upgrade_short_sword_level;
+        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyLongSwordUpgrade() {
+    fetch('/buy-long-sword/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_long_sword_level').innerHTML = data.upgrade_long_sword_level;
+        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buySlingshotUpgrade() {
+    fetch('/buy-slingshot/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_slingshot_level').innerHTML = data.upgrade_slingshot_level;
+        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyBowUpgrade() {
+    fetch('/buy-bow/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_bow_level').innerHTML = data.upgrade_bow_level;
+        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyCrossbowUpgrade() {
+    fetch('/buy-crossbow/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_crossbow_level').innerHTML = data.upgrade_crossbow_level;
+        document.getElementById('upgrade_crossbow_cost').innerText = data.upgrade_crossbow_cost;
 
         updateTitle(data.points);
 
@@ -91,15 +232,47 @@ function resetGame() {
     })
     .then(res => res.json())
     .then(data => {
+
+        // base stats
         document.getElementById('points').innerText = data.points;
         document.getElementById('points_per_click').innerText = data.points_per_click;
-        document.getElementById('cost').innerText = data.upgrade_cost;
+
         document.getElementById('points_per_second').innerText = data.points_per_second;
-        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
-        document.getElementById('crit_chance').innerText = data.crit_chance;
-        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
         document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
+        document.getElementById('crit_chance').innerText = data.crit_chance;
+
+        // crit system 
+        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
+        document.getElementById('upgrade_crit_chance_level').innerText = data.upgrade_crit_chance_level;
+
         document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost;
+        document.getElementById('upgrade_crit_multiplier_level').innerText = data.upgrade_crit_multiplier_level;
+
+        // click income
+        document.getElementById('cost').innerText = data.upgrade_cost;
+        document.getElementById('upgrade_level').innerText = data.upgrade_level;
+
+        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('upgrade_wooden_sword_level').innerText = data.upgrade_wooden_sword_level;
+
+        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost;
+        document.getElementById('upgrade_short_sword_level').innerText = data.upgrade_short_sword_level;
+
+        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost;
+        document.getElementById('upgrade_long_sword_level').innerText = data.upgrade_long_sword_level;
+
+        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost;
+        document.getElementById('upgrade_slingshot_level').innerText = data.upgrade_slingshot_level;
+
+        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost;
+        document.getElementById('upgrade_bow_level').innerText = data.upgrade_bow_level;
+
+        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('upgrade_crossbow_level').innerText = data.upgrade_crossbow_level;
+
+        // auto income 
+        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
+        document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
 
         updateTitle(data.points);
     });
@@ -178,6 +351,7 @@ function buyAutoUpgrade() {
     .then(data => {
         document.getElementById('points').innerText = data.points;
         document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
         document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
 
         updateTitle(data.points);
@@ -201,6 +375,7 @@ function buyCritUpgrade() {
         document.getElementById('points').innerText = data.points;
         document.getElementById('crit_chance').innerText = data.crit_chance;
         document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
+        document.getElementById('upgrade_crit_chance_level').innerText = data.upgrade_crit_chance_level;
 
         updateTitle(data.points);
 
@@ -208,7 +383,6 @@ function buyCritUpgrade() {
         upgradeSound.currentTime = 0;
         upgradeSound.play().catch(err => console.log(err));
     });
-
 }
 
 
@@ -225,6 +399,7 @@ function buyMultiplierUpgrade() {
         document.getElementById('points').innerText = data.points;
         document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
         document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost;
+        document.getElementById('upgrade_crit_multiplier_level').innerText = data.upgrade_crit_multiplier_level;
 
         updateTitle(data.points);
 
@@ -232,8 +407,6 @@ function buyMultiplierUpgrade() {
         upgradeSound.currentTime = 0;
         upgradeSound.play().catch(err => console.log(err));
     });
-
-
 }
 
 setInterval(() => {

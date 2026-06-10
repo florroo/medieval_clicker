@@ -18,6 +18,7 @@ body.dark .name, body.dark .github {
 .click_upgrades {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 50px;
 }
 
 .sps_upgrades {
@@ -59,6 +60,7 @@ h1 {
     position: fixed;
     bottom: 0px;
     width: 100%;
+    border-top: 1px dotted white;
 }
 
 .buttons {
@@ -106,4 +108,14 @@ h1 {
         opacity: 0;
         transform: translateY(-50px);
     }
+}
+
+
+.weapon-image {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    border: 1px solid white;
+    padding: 40px 20px;
+    background-color: #747272;
 }

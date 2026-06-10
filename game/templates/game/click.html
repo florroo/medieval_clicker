@@ -22,7 +22,7 @@
 
         <b> Obecnie masz <span id="points_per_click">{{ player.points_per_click }}</span> ppc 🗡</b> <BR>
             w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 🎲
-            oraz moc kryta: <span id="crit_multiplier">x{{ player.crit_multiplier }}</span>🧨<BR>
+            oraz moc kryta: x<span id="crit_multiplier">{{ player.crit_multiplier }}</span>🧨<BR>
         <B>Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 🕰</B>
     </div>
 
@@ -30,46 +30,108 @@
     <hr>
 
 
-    <h3>Upgrade</h3>
+    <h3>Click upgrades</h3>
     <div class="upgrades">
         <div class="click_upgrades">
-            <div class="click_upgrade">
-                <p>Lepszy klik (+1 do ppc 🗡): <span id="cost">{{ player.upgrade_cost }} szekli</span></p>
+            <div class="click_fork_upgrade">
+                <img src="{% static 'game/images/fork.png' %}" class="weapon-image">
 
-                <button onclick="buyUpgrade()">Kup upgrade</button>
+                <p>Obecny poziom: <span id="upgrade_level">{{ player.upgrade_level }}</span></p>
+                <p>Widly (+1 do ppc 🗡)</p>
+
+                <button onclick="buyUpgrade()"><span id="cost">{{ player.upgrade_cost }}</span> szekli</button>
             </div>
 
+            <div class="click_wooden_sword_upgrade">
+                <img src="{% static 'game/images/wooden_sword.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_wooden_sword_level">{{ player.upgrade_wooden_sword_level }}</span></p>
+                <p>Drewniany miecz (+3 do ppc 🗡)</p>
+
+                <button onclick="buyWoodenSwordUpgrade()"><span id="upgrade_wooden_sword_cost">{{ player.upgrade_wooden_sword_cost }}</span> szekli</button>
+            </div>
+
+            <div class="click_short_sword_upgrade">
+                <img src="{% static 'game/images/short_sword.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_short_sword_level">{{ player.upgrade_short_sword_level }}</span></p>
+                <p>Krotki miecz (+5 do ppc 🗡)</p>
+
+                <button onclick="buyShortSwordUpgrade()"><span id="upgrade_short_sword_cost">{{ player.upgrade_short_sword_cost }}</span> szekli</button>
+            </div>
+
+            <div class="click_long_sword_upgrade">
+                <img src="{% static 'game/images/long_sword.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_long_sword_level">{{ player.upgrade_long_sword_level }}</span></p>
+                <p>Dlugi miecz (+10 do ppc 🗡)</p>
+
+                <button onclick="buyLongSwordUpgrade()"><span id="upgrade_long_sword_cost">{{ player.upgrade_long_sword_cost }} </span> szekli</button>
+            </div>
+
+            <div class="click_slingshot_upgrade">
+                <img src="{% static 'game/images/slingshot.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_slingshot_level">{{ player.upgrade_slingshot_level }}</span></p>
+                <p>Proca (+25 do ppc 🗡)</p>
+
+                <button onclick="buySlingshotUpgrade()"><span id="upgrade_slingshot_cost">{{ player.upgrade_slingshot_cost }} </span> szekli</button>
+            </div>
+
+            <div class="click_bow_upgrade">
+                <img src="{% static 'game/images/bow.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_bow_level">{{ player.upgrade_bow_level }}</span></p>
+                <p>Luk (+50 do ppc 🗡)</p>
+
+                <button onclick="buyBowUpgrade()"><span id="upgrade_bow_cost">{{ player.upgrade_bow_cost }}</span> szekli</button>
+            </div>
+
+            <div class="click_crossbow_upgrade">
+                <img src="{% static 'game/images/crossbow.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_crossbow_level">{{ player.upgrade_crossbow_level }}</span></p>
+                <p>Kusza (+100 do ppc 🗡)</p>
+
+                <button onclick="buyCrossbowUpgrade()"><span id="upgrade_crossbow_cost">{{ player.upgrade_crossbow_cost }} </span> szekli</button>
+            </div>
 
             <div class="crit_upgrade">
-                <p>Wiekszy kryt (+1% 🎲): <span id="crit_chance_upgrade_cost">{{ player.crit_chance_upgrade_cost }} szekli</span></p>
+                <img src="{% static 'game/images/dice.png' %}" class="weapon-image">
 
-                <button onclick="buyCritUpgrade()">Kup kryta</button>
+                <p>Obecny poziom: <span id="upgrade_crit_chance_level">{{ player.upgrade_crit_chance_level }}</span></p>
+                <p>Wiekszy kryt (+1% 🎲)</p>
+
+                <button onclick="buyCritUpgrade()"><span id="crit_chance_upgrade_cost">{{ player.crit_chance_upgrade_cost }} </span> szekli</button>
             </div>
 
 
             <div class="multiplier_upgrade">
-                <p>Mocniejszy kryt (+1x 🧨): <span id="crit_multiplier_upgrade_cost">{{ player.crit_multiplier_upgrade_cost }} szekli</span></p>
+                <img src="{% static 'game/images/dinamite.png' %}" class="weapon-image">
 
-                <button onclick="buyMultiplierUpgrade()">Kup mnoznik</button>
+                <p>Obecny poziom: <span id="upgrade_crit_multiplier_level">{{ player.upgrade_crit_multiplier_level }}</span></p>
+                <p>Mocniejszy kryt (+1x 🧨)</p>
+
+                <button onclick="buyMultiplierUpgrade()"><span id="crit_multiplier_upgrade_cost">{{ player.crit_multiplier_upgrade_cost }} </span> szekli</button>
             </div>
 
 
         </div>
 
-
+        <h3>Auto upgrades</h3>
         <div class="sps_upgrades">
-            <div class="horseman_upgrade">
-                <p>Stajenny (+1 do sps 🕰): <span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span></p>
+            <div class="groom_upgrade">
+                <img src="{% static 'game/images/groom.png' %}" class="weapon-image">
 
-                <button onclick="buyAutoUpgrade()">Kup stajennego</button>
+                <p>Obecny poziom: <span id="upgrade_auto_level">{{ player.upgrade_auto_level }}</span></p>
+                <p>Stajenny (+1 do sps 🕰)</p>
+
+                <button onclick="buyAutoUpgrade()"><span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span> szekli</button>
             </div>
 
 
         </div>
     </div>
-
-
-    <hr>
 
 
     <div class="options">
