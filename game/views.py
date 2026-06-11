@@ -49,6 +49,7 @@ def buy_upgrade(request):
         player = Player.objects.first()
 
         if player.points >= player.upgrade_cost:
+            player.player_level += 1
             player.points -= player.upgrade_cost
             player.upgrade_level += 1
             player.points_per_click += 1
@@ -56,6 +57,7 @@ def buy_upgrade(request):
             player.save()
 
         return JsonResponse({
+            'player_level': player.player_level,
             'points': player.points,
             'upgrade_level': player.upgrade_level,
             'points_per_click': player.points_per_click,
@@ -68,6 +70,7 @@ def reset_game(request):
         player = Player.objects.first()
 
         # base stats
+        player.player_level = 0
         player.points = 0
         player.points_per_click = 1
         player.upgrade_cost = 10
@@ -116,6 +119,7 @@ def reset_game(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'points_per_click': player.points_per_click,
             'upgrade_cost': player.upgrade_cost,
             'upgrade_level': player.upgrade_level,
@@ -165,6 +169,7 @@ def buy_auto_upgrade(request):
         success = False
 
         if player.points >= player.auto_upgrade_cost:
+            player.player_level += 1
             player.points -= player.auto_upgrade_cost
             player.upgrade_auto_level += 1
             player.points_per_second += 1
@@ -174,6 +179,7 @@ def buy_auto_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_auto_level': player.upgrade_auto_level,
             'points_per_second': player.points_per_second,
             'auto_upgrade_cost': player.auto_upgrade_cost,
@@ -222,7 +228,11 @@ def buy_wooden_sword_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_wooden_sword_cost:
+            player.player_level += 1
             player.points -= player.upgrade_wooden_sword_cost
             player.upgrade_wooden_sword_level += 1
             player.points_per_click += 3
@@ -231,6 +241,7 @@ def buy_wooden_sword_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_wooden_sword_level': player.upgrade_wooden_sword_level,
             'points_per_click': player.points_per_click,
             'upgrade_wooden_sword_cost': player.upgrade_wooden_sword_cost
@@ -240,7 +251,11 @@ def buy_short_sword_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 10:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_short_sword_cost:
+            player.player_level += 1
             player.points -= player.upgrade_short_sword_cost
             player.upgrade_short_sword_level += 1
             player.points_per_click += 5
@@ -249,6 +264,7 @@ def buy_short_sword_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_short_sword_level': player.upgrade_short_sword_level,
             'points_per_click': player.points_per_click,
             'upgrade_short_sword_cost': player.upgrade_short_sword_cost
@@ -258,7 +274,11 @@ def buy_long_sword_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 15:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_long_sword_cost:
+            player.player_level += 1
             player.points -= player.upgrade_long_sword_cost
             player.upgrade_long_sword_level += 1
             player.points_per_click += 10
@@ -267,6 +287,7 @@ def buy_long_sword_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_long_sword_level': player.upgrade_long_sword_level,
             'points_per_click': player.points_per_click,
             'upgrade_long_sword_cost': player.upgrade_long_sword_cost
@@ -276,7 +297,11 @@ def buy_slingshot_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 20:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_slingshot_cost:
+            player.player_level += 1
             player.points -= player.upgrade_slingshot_cost
             player.upgrade_slingshot_level += 1
             player.points_per_click += 25
@@ -285,6 +310,7 @@ def buy_slingshot_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_slingshot_level': player.upgrade_slingshot_level,
             'points_per_click': player.points_per_click,
             'upgrade_slingshot_cost': player.upgrade_slingshot_cost
@@ -294,7 +320,11 @@ def buy_bow_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 25:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_bow_cost:
+            player.player_level += 1
             player.points -= player.upgrade_bow_cost
             player.upgrade_bow_level += 1
             player.points_per_click += 50
@@ -303,6 +333,7 @@ def buy_bow_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_bow_level': player.upgrade_bow_level,
             'points_per_click': player.points_per_click,
             'upgrade_bow_cost': player.upgrade_bow_cost
@@ -312,7 +343,11 @@ def buy_crossbow_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
+        if player.player_level < 30:
+            return JsonResponse({"error": "Locked"}, status=403)
+
         if player.points >= player.upgrade_crossbow_cost:
+            player.player_level += 1
             player.points -= player.upgrade_crossbow_cost
             player.upgrade_crossbow_level += 1
             player.points_per_click += 100
@@ -321,6 +356,7 @@ def buy_crossbow_upgrade(request):
 
         return JsonResponse({
             'points': player.points,
+            'player_level': player.player_level,
             'upgrade_crossbow_level': player.upgrade_crossbow_level,
             'points_per_click': player.points_per_click,
             'upgrade_crossbow_cost': player.upgrade_crossbow_cost

@@ -70,8 +70,10 @@ function buyUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_level').innerHTML = data.upgrade_level;
         document.getElementById('cost').innerText = data.upgrade_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
-        updateTitle(data.points);
+        updateUpgradeLocks();
+        updateTitle(data.points)
 
         const upgradeSound = document.getElementById("upgrade_sound");
         upgradeSound.currentTime = 0;
@@ -94,7 +96,9 @@ function buyWoodenSwordUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_wooden_sword_level').innerHTML = data.upgrade_wooden_sword_level;
         document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -117,7 +121,9 @@ function buyShortSwordUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_short_sword_level').innerHTML = data.upgrade_short_sword_level;
         document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -141,7 +147,9 @@ function buyLongSwordUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_long_sword_level').innerHTML = data.upgrade_long_sword_level;
         document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -164,7 +172,9 @@ function buySlingshotUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_slingshot_level').innerHTML = data.upgrade_slingshot_level;
         document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -187,7 +197,9 @@ function buyBowUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_bow_level').innerHTML = data.upgrade_bow_level;
         document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -210,7 +222,9 @@ function buyCrossbowUpgrade() {
         document.getElementById('points_per_click').innerText = data.points_per_click;
         document.getElementById('upgrade_crossbow_level').innerHTML = data.upgrade_crossbow_level;
         document.getElementById('upgrade_crossbow_cost').innerText = data.upgrade_crossbow_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -236,6 +250,8 @@ function resetGame() {
         // base stats
         document.getElementById('points').innerText = data.points;
         document.getElementById('points_per_click').innerText = data.points_per_click;
+
+        document.getElementById('player_level').innerHTML = data.player_level;
 
         document.getElementById('points_per_second').innerText = data.points_per_second;
         document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
@@ -274,6 +290,7 @@ function resetGame() {
         document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
     });
 }
@@ -336,6 +353,8 @@ window.onload = function () {
         document.body.classList.add("dark");
         document.getElementById("mode_btn").innerText = "Light mode";
     }
+
+    updateUpgradeLocks();
 };
 
 
@@ -353,7 +372,9 @@ function buyAutoUpgrade() {
         document.getElementById('points_per_second').innerText = data.points_per_second;
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
         document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
+        document.getElementById('player_level').innerText = data.player_level;
 
+        updateUpgradeLocks();
         updateTitle(data.points);
 
         const upgradeSound = document.getElementById("upgrade_sound");
@@ -442,4 +463,31 @@ function createFloatingText(x, y, value, isCrit = false) {
     setTimeout(() => {
         text.remove();
     }, 1000);
+}
+
+
+
+function updateUpgradeLocks() {
+    const playerLevel = parseInt(document.getElementById("player_level").innerText);
+
+    document.querySelectorAll(".upgrade-block").forEach(block => {
+        const requiredLevel = parseInt(block.dataset.requiredPlayerLevel);
+        const btn = block.querySelector("button");
+        const lock = block.querySelector(".lock-overlay");
+        const text = block.querySelector(".required-level-text");
+
+        if (text) {
+            text.innerText = requiredLevel;
+        }
+
+        if (playerLevel < requiredLevel) {
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            if (lock) lock.style.display = "flex";
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            if (lock) lock.style.display = "none";
+        }
+    });
 }

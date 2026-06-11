@@ -7,6 +7,7 @@ class Player(models.Model):
     last_click = models.DateTimeField(null=True, blank=True)
 
     points = models.IntegerField(default=0)
+    player_level = models.IntegerField(default=0)
 
     points_per_click = models.IntegerField(default=1)
     upgrade_cost = models.IntegerField(default=10)
@@ -51,3 +52,9 @@ class Player(models.Model):
     def __str__(self):
         return self.user.username
 
+class Boss(models.Model):
+    boss_hp = models.IntegerField(default=1000)
+    boss_level = models.IntegerField(default=1)
+    boss_reward = models.IntegerField(default=500)
+    boss_next_spawn = models.DateTimeField(null=True, blank=True)
+    boss_active = models.BooleanField(default=False)
