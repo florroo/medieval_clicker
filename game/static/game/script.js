@@ -256,6 +256,18 @@ function resetGame() {
         document.getElementById('points_per_second').innerText = data.points_per_second;
         document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
         document.getElementById('crit_chance').innerText = data.crit_chance;
+        document.getElementById('luck').innerText = data.luck;
+        document.getElementById('time_offline').innerText = data.time_offline;
+        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier;
+
+        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost;
+        document.getElementById('upgrade_time_offline_level').innerText = data.upgrade_time_offline_level;
+
+        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost;
+        document.getElementById('upgrade_shekel_multiplier_level').innerText = data.upgrade_shekel_multiplier_level;
+
+        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost;
+        document.getElementById('upgrade_luck_level').innerText = data.upgrade_luck_level;
 
         // crit system 
         document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
@@ -445,6 +457,54 @@ function buyLuckUpgrade() {
         document.getElementById('luck').innerText = data.luck;
         document.getElementById('upgrade_luck_level').innerText = data.upgrade_luck_level;
         document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyTimeOfflineUpgrade() {
+    fetch('/buy-time-offline/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('time_offline').innerText = data.time_offline;
+        document.getElementById('upgrade_time_offline_level').innerText = data.upgrade_time_offline_level;
+        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyShekelMultiplierUpgrade() {
+    fetch('/buy-shekel-multiplier/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier;
+        document.getElementById('upgrade_shekel_multiplier_level').innerText = data.upgrade_shekel_multiplier_level;
+        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost;
 
         updateTitle(data.points);
 

@@ -16,6 +16,8 @@ urlpatterns = [
     path('buy-crit-chance/', views.buy_crit_chance_upgrade, name='buy_crit_chance_upgrade'),
     path('buy-crit-multiplier/', views.buy_crit_multiplier_upgrade, name='buy_crit_multiplier_upgrade'),
     path('buy-luck/', views.buy_luck_upgrade, name='buy_luck_upgrade'),
-    
+    path('buy-time-offline/', views.buy_time_offline_upgrade, name='buy_time_offline_upgrade'),
+    path('buy-shekel-multiplier/', views.buy_shekel_multiplier_upgrade, name='buy_shekel_multiplier_upgrade'),
+
     # path('boss-hit/', views.boss_hit, name='boss_hit'),
 ]

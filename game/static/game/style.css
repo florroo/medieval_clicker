@@ -10,10 +10,6 @@ body {
 }
 
 .name, .github {
-    text-shadow: 0 0 5px purple;
-}
-
-body.dark .name, body.dark .github {
     text-shadow: 0 0 5px white;
 }
 
@@ -21,6 +17,50 @@ body.dark ::-webkit-scrollbar-track {
     background: #000;
 }
 
+
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    min-width: 220px;
+    padding: 8px 12px;
+
+    background: #ffffff;
+    color: #000000;
+
+    border: 2px solid #c0a080;
+    border-radius: 5px;
+
+    font-size: 20px;
+    text-align: center;
+
+    transition: opacity 0.2s;
+    z-index: 1000;
+}
+
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.break {
+    padding-top: 20px;
+    border-top: 4px solid #c0a080;
+    box-shadow: 0 -2px 0 #a67c52,
+                0 -4px 0 #795649;
+}
 
 .click_upgrades {
     display: flex;
@@ -64,12 +104,14 @@ body.dark {
 }
 
 .main_btn {
+    position: sticky;
+    top: 10px;
+    z-index: 50;
     font-size: 20px;
     background-color: #4a2e14;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
-
 
 .main_btn::before { 
     content: '⚔'; margin-right: 8px; font-size: 22px; opacity: 0.75; 
@@ -112,7 +154,7 @@ h1 {
 
 
 .reset_btn {
-    color: red;
+    color: rgb(236, 115, 115);
 }
 
 .options {
@@ -122,6 +164,13 @@ h1 {
     width: 100%;
     z-index: 100;
     background-color: #4a2e14;
+    border-top: 4px solid #c0a080;
+    box-shadow: 0 -2px 0 #a67c52,
+                0 -4px 0 #795649;
+}
+
+.options h3, .options p {
+    color: #f4e5c3;
 }
 
 .buttons {

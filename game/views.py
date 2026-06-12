@@ -75,42 +75,45 @@ def reset_game(request):
         player.points_per_click = 1
         player.upgrade_cost = 10
         player.upgrade_level = 0
+
         player.luck = 0
         player.upgrade_luck_level = 0
-        player.upgrade_luck_cost = 20
+        player.upgrade_luck_cost = 200
+
+        player.time_offline = 0
+        player.upgrade_time_offline_cost = 300
+        player.upgrade_time_offline_level = 0
+
+        player.shekel_multiplier = 1
+        player.upgrade_shekel_multiplier_level = 0
+        player.upgrade_shekel_multiplier_cost = 500
 
         # weapons
-        player.wooden_sword_per_click = 3
         player.upgrade_wooden_sword_cost = 100
         player.upgrade_wooden_sword_level = 0
 
-        player.short_sword_per_click = 5
         player.upgrade_short_sword_cost = 500
         player.upgrade_short_sword_level = 0
 
-        player.long_sword_per_click = 10
         player.upgrade_long_sword_cost = 1000
         player.upgrade_long_sword_level = 0
 
-        player.slingshot_per_click = 20
         player.upgrade_slingshot_cost = 2000
         player.upgrade_slingshot_level = 0
 
-        player.bow_per_click = 50
         player.upgrade_bow_cost = 5000
         player.upgrade_bow_level = 0
 
-        player.crossbow_per_click = 100
         player.upgrade_crossbow_cost = 10000
         player.upgrade_crossbow_level = 0
 
         # crit system
         player.crit_chance = 1
-        player.crit_chance_upgrade_cost = 20
+        player.crit_chance_upgrade_cost = 100
         player.upgrade_crit_chance_level = 0
 
         player.crit_multiplier = 2
-        player.crit_multiplier_upgrade_cost = 20
+        player.crit_multiplier_upgrade_cost = 150
         player.upgrade_crit_multiplier_level = 0
 
         # auto click
@@ -131,27 +134,29 @@ def reset_game(request):
             'upgrade_luck_level': player.upgrade_luck_level,
             'upgrade_luck_cost': player.upgrade_luck_cost,
 
-            'wooden_sword_per_click': player.wooden_sword_per_click,
+            'shekel_multiplier': player.shekel_multiplier,
+            'upgrade_shekel_multiplier_cost': player.upgrade_shekel_multiplier_cost,
+            'upgrade_shekel_multiplier_level': player.upgrade_shekel_multiplier_level,
+
+            'time_offline': player.time_offline,
+            'upgrade_time_offline_cost': player.upgrade_time_offline_cost,
+            'upgrade_time_offline_level': player.upgrade_time_offline_level,
+
             'upgrade_wooden_sword_cost': player.upgrade_wooden_sword_cost,
             'upgrade_wooden_sword_level': player.upgrade_wooden_sword_level,
 
-            'short_sword_per_click': player.short_sword_per_click,
             'upgrade_short_sword_cost': player.upgrade_short_sword_cost,
             'upgrade_short_sword_level': player.upgrade_short_sword_level,
 
-            'long_sword_per_click': player.long_sword_per_click,
             'upgrade_long_sword_cost': player.upgrade_long_sword_cost,
             'upgrade_long_sword_level': player.upgrade_long_sword_level,
 
-            'slingshot_per_click': player.slingshot_per_click,
             'upgrade_slingshot_cost': player.upgrade_slingshot_cost,
             'upgrade_slingshot_level': player.upgrade_slingshot_level,
 
-            'bow_per_click': player.bow_per_click,
             'upgrade_bow_cost': player.upgrade_bow_cost,
             'upgrade_bow_level': player.upgrade_bow_level,
 
-            'crossbow_per_click': player.crossbow_per_click,
             'upgrade_crossbow_cost': player.upgrade_crossbow_cost,
             'upgrade_crossbow_level': player.upgrade_crossbow_level,
 
@@ -200,7 +205,7 @@ def buy_crit_chance_upgrade(request):
         if player.points >= player.crit_chance_upgrade_cost:
             player.points -= player.crit_chance_upgrade_cost
             player.upgrade_crit_chance_level += 1
-            player.crit_chance += 1  # +1%
+            player.crit_chance += 1 
             player.crit_chance_upgrade_cost *= 2
             player.save()
 
@@ -220,7 +225,7 @@ def buy_crit_multiplier_upgrade(request):
             player.points -= player.crit_multiplier_upgrade_cost
             player.upgrade_crit_multiplier_level += 1
             player.crit_multiplier += 1
-            player.crit_multiplier_upgrade_cost *= 2
+            player.crit_multiplier_upgrade_cost *= 3
             player.save()
 
         return JsonResponse({
@@ -386,4 +391,42 @@ def buy_luck_upgrade(request):
             'luck': player.luck,
             'upgrade_luck_level': player.upgrade_luck_level,
             'upgrade_luck_cost': player.upgrade_luck_cost
+        })
+
+
+def buy_time_offline_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.points >= player.upgrade_time_offline_cost:
+            player.points -= player.upgrade_time_offline_cost
+            player.upgrade_time_offline_level += 1
+            player.time_offline += 1
+            player.upgrade_time_offline_cost *= 3
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'time_offline': player.time_offline,
+            'upgrade_time_offline_level': player.upgrade_time_offline_level,
+            'upgrade_time_offline_cost': player.upgrade_time_offline_cost
+        })
+
+
+def buy_shekel_multiplier_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.points >= player.upgrade_shekel_multiplier_cost:
+            player.points -= player.upgrade_shekel_multiplier_cost
+            player.upgrade_shekel_multiplier_level += 1
+            player.shekel_multiplier += 0.1
+            player.upgrade_shekel_multiplier_cost *= 3
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'shekel_multiplier': player.shekel_multiplier,
+            'upgrade_shekel_multiplier_level': player.upgrade_shekel_multiplier_level,
+            'upgrade_shekel_multiplier_cost': player.upgrade_shekel_multiplier_cost
         })

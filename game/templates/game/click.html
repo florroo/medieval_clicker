@@ -15,30 +15,72 @@
 <body>
     <h1>Just click and relax</h1>
 
-    <div class="main">
-        <p class="points_info">Szekle: <span id="points">{{ player.points }}</span></p>
-        <p class="points_info">Twój poziom: <span id="player_level">{{ player.player_level }}</span></p>
-        <button onclick="sendClick(event)" class="main_btn">Kliknij mnie!</button> <BR>
+    <p class="points_info">Szekle: <span id="points">{{ player.points }}</span></p>
+    <p class="points_info">Twój poziom: <span id="player_level">{{ player.player_level }}</span></p>
 
-        <b> Obecnie masz <span id="points_per_click">{{ player.points_per_click }}</span> ppc 🗡</b> <BR>
-            w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 🎲,
-            moc kryta: x<span id="crit_multiplier">{{ player.crit_multiplier }}</span>🧨,
-            luck: <span id="luck">{{ player.luck }}</span>🍀<BR>
-        <B>Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 🕐</B>
+    <button onclick="sendClick(event)" class="main_btn">Kliknij mnie!</button>
+
+    <div class="main">
+        Obecnie masz <span id="points_per_click">{{ player.points_per_click }}</span> spc 
+                <span class="tooltip">💥
+                    <span class="tooltip-text">
+                        Twoja moc uderzenia
+                    </span>
+                </span>
+                <BR>
+
+        w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 
+            <span class="tooltip">🎲
+                <span class="tooltip-text">
+                    Szansa na trafienie krytyczne.
+                </span>
+            </span>
+
+        moc kryta: x<span id="crit_multiplier">{{ player.crit_multiplier }}</span>
+            <span class="tooltip">🧨,
+                <span class="tooltip-text">
+                    Moc krytyka
+                </span>
+            </span>
+
+        luck: <span id="luck">{{ player.luck }}</span>
+            <span class="tooltip">🍀,
+                <span class="tooltip-text">
+                    Twoje szczescie
+                </span>
+            </span>
+
+        offline: <span id="time_offline">{{ player.time_offline }}</span>h
+            <span class="tooltip">🌙,
+                <span class="tooltip-text">
+                    Czas przez ktory bedziesz zbieral szekle
+                </span>
+            </span>
+
+        mnoznik: <span id="shekel_multiplier">{{ player.shekel_multiplier }}</span>x
+            <span class="tooltip">💲
+                <span class="tooltip-text">
+                    Mnoznik szekli ktore otrzymujesz 
+                </span>
+            </span>
+        <BR>
+
+        Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 
+            <span class="tooltip">🕐
+                <span class="tooltip-text">
+                    Szekle na sekunde
+                </span>
+            </span>
     </div>
 
-
-    <hr>
-
-
-    <h3>Click upgrades</h3>
+    <h3 class="break">Click upgrades</h3>
     <div class="upgrades">
         <div class="click_upgrades">
             <div class="click_fork_upgrade upgrade-block" data-required-player-level="0">
                 <img src="{% static 'game/images/fork.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_level">{{ player.upgrade_level }}</span></p>
-                <p>Widly (+1 do ppc 🗡)</p>
+                <p>Widly (+1 do spc 💥)</p>
 
                 <button onclick="buyUpgrade()"><span id="cost">{{ player.upgrade_cost }}</span> szekli</button>
             </div>
@@ -47,7 +89,7 @@
                 <img src="{% static 'game/images/wooden_sword.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_wooden_sword_level">{{ player.upgrade_wooden_sword_level }}</span></p>
-                <p>Drewniany (+3 do ppc 🗡)</p>
+                <p>Drewniany (+3 do spc 💥)</p>
 
                 <button onclick="buyWoodenSwordUpgrade()"><span id="upgrade_wooden_sword_cost">{{ player.upgrade_wooden_sword_cost }}</span> szekli</button>
 
@@ -58,7 +100,7 @@
                 <img src="{% static 'game/images/short_sword.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_short_sword_level">{{ player.upgrade_short_sword_level }}</span></p>
-                <p>Krotki miecz (+5 do ppc 🗡)</p>
+                <p>Krotki miecz (+5 do spc 💥)</p>
 
                 <button onclick="buyShortSwordUpgrade()"><span id="upgrade_short_sword_cost">{{ player.upgrade_short_sword_cost }}</span> szekli</button>
 
@@ -69,7 +111,7 @@
                 <img src="{% static 'game/images/long_sword.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_long_sword_level">{{ player.upgrade_long_sword_level }}</span></p>
-                <p>Dlugi miecz (+10 do ppc 🗡)</p>
+                <p>Dlugi miecz (+10 do spc 💥)</p>
 
                 <button onclick="buyLongSwordUpgrade()"><span id="upgrade_long_sword_cost">{{ player.upgrade_long_sword_cost }} </span> szekli</button>
 
@@ -80,7 +122,7 @@
                 <img src="{% static 'game/images/slingshot.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_slingshot_level">{{ player.upgrade_slingshot_level }}</span></p>
-                <p>Proca (+25 do ppc 🗡)</p>
+                <p>Proca (+25 do spc 💥)</p>
 
                 <button onclick="buySlingshotUpgrade()"><span id="upgrade_slingshot_cost">{{ player.upgrade_slingshot_cost }} </span> szekli</button>
 
@@ -91,7 +133,7 @@
                 <img src="{% static 'game/images/bow.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_bow_level">{{ player.upgrade_bow_level }}</span></p>
-                <p>Luk (+50 do ppc 🗡)</p>
+                <p>Luk (+50 do spc 💥)</p>
 
                 <button onclick="buyBowUpgrade()"><span id="upgrade_bow_cost">{{ player.upgrade_bow_cost }}</span> szekli</button>
 
@@ -102,7 +144,7 @@
                 <img src="{% static 'game/images/crossbow.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_crossbow_level">{{ player.upgrade_crossbow_level }}</span></p>
-                <p>Kusza (+100 do ppc 🗡)</p>
+                <p>Kusza (+100 do spc 💥)</p>
 
                 <button onclick="buyCrossbowUpgrade()"><span id="upgrade_crossbow_cost">{{ player.upgrade_crossbow_cost }} </span> szekli</button>
 
@@ -153,6 +195,24 @@
                 <p>Wiekszy luck (+1 🍀)</p>
 
                 <button onclick="buyLuckUpgrade()"><span id="upgrade_luck_cost">{{ player.upgrade_luck_cost }} </span> szekli</button>
+            </div>
+
+            <div class="time_offline_upgrade crit-block">
+                <img src="{% static 'game/images/offline.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_time_offline_level">{{ player.upgrade_time_offline_level }}</span></p>
+                <p>Wiekszy czas (+1 🌙)</p>
+
+                <button onclick="buyTimeOfflineUpgrade()"><span id="upgrade_time_offline_cost">{{ player.upgrade_time_offline_cost }} </span> szekli</button>
+            </div>
+
+            <div class="shekel_multiplier_upgrade crit-block">
+                <img src="{% static 'game/images/shekel_multiplier.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_shekel_multiplier_level">{{ player.upgrade_shekel_multiplier_level }}</span></p>
+                <p>Wiekszy mnoznik (+0.1x 💲)</p>
+
+                <button onclick="buyShekelMultiplierUpgrade()"><span id="upgrade_shekel_multiplier_cost">{{ player.upgrade_shekel_multiplier_cost }} </span> szekli</button>
             </div>
         </div>
     </div>

@@ -10,8 +10,16 @@ class Player(models.Model):
     player_level = models.IntegerField(default=0)
 
     luck = models.IntegerField(default=0)
-    upgrade_luck_cost = models.IntegerField(default=20)
+    upgrade_luck_cost = models.IntegerField(default=200)
     upgrade_luck_level = models.IntegerField(default=0)
+
+    time_offline = models.IntegerField(default=0)
+    upgrade_time_offline_cost = models.IntegerField(default=300)
+    upgrade_time_offline_level = models.IntegerField(default=0)
+
+    shekel_multiplier = models.IntegerField(default=1)
+    upgrade_shekel_multiplier_cost = models.IntegerField(default=500)
+    upgrade_shekel_multiplier_level = models.IntegerField(default=0)
 
     points_per_click = models.IntegerField(default=1)
     upgrade_cost = models.IntegerField(default=10)
@@ -42,11 +50,11 @@ class Player(models.Model):
     upgrade_crossbow_level = models.IntegerField(default=0)
 
     crit_chance = models.IntegerField(default=1)
-    crit_chance_upgrade_cost = models.IntegerField(default=20)
+    crit_chance_upgrade_cost = models.IntegerField(default=100)
     upgrade_crit_chance_level = models.IntegerField(default=0)
 
     crit_multiplier = models.IntegerField(default=2)
-    crit_multiplier_upgrade_cost = models.IntegerField(default=20)
+    crit_multiplier_upgrade_cost = models.IntegerField(default=150)
     upgrade_crit_multiplier_level = models.IntegerField(default=0)
 
     points_per_second = models.IntegerField(default=0)
@@ -57,8 +65,29 @@ class Player(models.Model):
         return self.user.username
 
 class Boss(models.Model):
+    boss_name = models.CharField(max_length=50, default="Boss")
+    boss_max_hp = models.IntegerField(default=1000)
     boss_hp = models.IntegerField(default=1000)
     boss_level = models.IntegerField(default=1)
     boss_reward = models.IntegerField(default=500)
     boss_next_spawn = models.DateTimeField(null=True, blank=True)
-    boss_active = models.BooleanField(default=False)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("inactive", "Inactive"),
+            ("active", "Active"),
+            ("dead", "Dead"),
+        ],
+        default="inactive"
+    )
+    spawned_at = models.DateTimeField(null=True, blank=True)
+    killed_at = models.DateTimeField(null=True, blank=True)
+
+
+class Monster(models.Model):
+    monster_max_hp = models.IntegerField(default=50)
+    monster_hp = models.IntegerField(default=50)
+    monster_name = models.CharField(max_length=50, default="Monster")
+    monster_reward = models.IntegerField(default=10)
+    monster_is_alive = models.BooleanField(default=True)
+    monster_level = models.IntegerField(default=1)
