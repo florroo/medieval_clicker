@@ -15,7 +15,7 @@ urlpatterns = [
     path('buy-auto/', views.buy_auto_upgrade, name='buy_auto_upgrade'),
     path('buy-crit-chance/', views.buy_crit_chance_upgrade, name='buy_crit_chance_upgrade'),
     path('buy-crit-multiplier/', views.buy_crit_multiplier_upgrade, name='buy_crit_multiplier_upgrade'),
-
+    path('buy-luck/', views.buy_luck_upgrade, name='buy_luck_upgrade'),
     
     # path('boss-hit/', views.boss_hit, name='boss_hit'),
 ]

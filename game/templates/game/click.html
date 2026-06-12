@@ -21,9 +21,10 @@
         <button onclick="sendClick(event)" class="main_btn">Kliknij mnie!</button> <BR>
 
         <b> Obecnie masz <span id="points_per_click">{{ player.points_per_click }}</span> ppc 🗡</b> <BR>
-            w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 🎲
-            oraz moc kryta: x<span id="crit_multiplier">{{ player.crit_multiplier }}</span>🧨<BR>
-        <B>Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 🕰</B>
+            w tym kryta: <span id="crit_chance">{{ player.crit_chance }}</span>% 🎲,
+            moc kryta: x<span id="crit_multiplier">{{ player.crit_multiplier }}</span>🧨,
+            luck: <span id="luck">{{ player.luck }}</span>🍀<BR>
+        <B>Na sekunde: <span id="points_per_second">{{ player.points_per_second }}</span> sps 🕐</B>
     </div>
 
 
@@ -53,7 +54,7 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
-            <div class="click_short_sword_upgrade upgrade-block" data-required-player-level="10">
+            <div class="click_short_sword_upgrade upgrade-block" data-required-player-level="15">
                 <img src="{% static 'game/images/short_sword.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_short_sword_level">{{ player.upgrade_short_sword_level }}</span></p>
@@ -64,7 +65,7 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
-            <div class="click_long_sword_upgrade upgrade-block" data-required-player-level="15">
+            <div class="click_long_sword_upgrade upgrade-block" data-required-player-level="25">
                 <img src="{% static 'game/images/long_sword.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_long_sword_level">{{ player.upgrade_long_sword_level }}</span></p>
@@ -75,7 +76,7 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
-            <div class="click_slingshot_upgrade upgrade-block" data-required-player-level="20">
+            <div class="click_slingshot_upgrade upgrade-block" data-required-player-level="30">
                 <img src="{% static 'game/images/slingshot.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_slingshot_level">{{ player.upgrade_slingshot_level }}</span></p>
@@ -86,7 +87,7 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
-            <div class="click_bow_upgrade upgrade-block" data-required-player-level="25">
+            <div class="click_bow_upgrade upgrade-block" data-required-player-level="40">
                 <img src="{% static 'game/images/bow.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_bow_level">{{ player.upgrade_bow_level }}</span></p>
@@ -97,7 +98,7 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
-            <div class="click_crossbow_upgrade upgrade-block" data-required-player-level="30">
+            <div class="click_crossbow_upgrade upgrade-block" data-required-player-level="50">
                 <img src="{% static 'game/images/crossbow.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_crossbow_level">{{ player.upgrade_crossbow_level }}</span></p>
@@ -108,6 +109,24 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
+        </div>
+
+        <h3>Auto upgrades</h3>
+        <div class="sps_upgrades">
+            <div class="groom_upgrade">
+                <img src="{% static 'game/images/groom.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_auto_level">{{ player.upgrade_auto_level }}</span></p>
+                <p>Stajenny (+1 do sps 🕐)</p>
+
+                <button onclick="buyAutoUpgrade()"><span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span> szekli</button>
+            </div>
+
+
+        </div>
+
+        <h3>Other upgrades</h3>
+        <div class="other_upgrades">
             <div class="crit_upgrade crit-block">
                 <img src="{% static 'game/images/dice.png' %}" class="weapon-image">
 
@@ -127,21 +146,14 @@
                 <button onclick="buyMultiplierUpgrade()"><span id="crit_multiplier_upgrade_cost">{{ player.crit_multiplier_upgrade_cost }} </span> szekli</button>
             </div>
 
+            <div class="luck_upgrade crit-block">
+                <img src="{% static 'game/images/luck.png' %}" class="weapon-image">
 
-        </div>
+                <p>Obecny poziom: <span id="upgrade_luck_level">{{ player.upgrade_luck_level }}</span></p>
+                <p>Wiekszy luck (+1 🍀)</p>
 
-        <h3>Auto upgrades</h3>
-        <div class="sps_upgrades">
-            <div class="groom_upgrade">
-                <img src="{% static 'game/images/groom.png' %}" class="weapon-image">
-
-                <p>Obecny poziom: <span id="upgrade_auto_level">{{ player.upgrade_auto_level }}</span></p>
-                <p>Stajenny (+1 do sps 🕰)</p>
-
-                <button onclick="buyAutoUpgrade()"><span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span> szekli</button>
+                <button onclick="buyLuckUpgrade()"><span id="upgrade_luck_cost">{{ player.upgrade_luck_cost }} </span> szekli</button>
             </div>
-
-
         </div>
     </div>
 

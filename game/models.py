@@ -9,6 +9,10 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     player_level = models.IntegerField(default=0)
 
+    luck = models.IntegerField(default=0)
+    upgrade_luck_cost = models.IntegerField(default=20)
+    upgrade_luck_level = models.IntegerField(default=0)
+
     points_per_click = models.IntegerField(default=1)
     upgrade_cost = models.IntegerField(default=10)
     upgrade_level = models.IntegerField(default=0)

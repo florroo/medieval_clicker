@@ -75,6 +75,9 @@ def reset_game(request):
         player.points_per_click = 1
         player.upgrade_cost = 10
         player.upgrade_level = 0
+        player.luck = 0
+        player.upgrade_luck_level = 0
+        player.upgrade_luck_cost = 20
 
         # weapons
         player.wooden_sword_per_click = 3
@@ -123,6 +126,10 @@ def reset_game(request):
             'points_per_click': player.points_per_click,
             'upgrade_cost': player.upgrade_cost,
             'upgrade_level': player.upgrade_level,
+
+            'luck': player.luck,
+            'upgrade_luck_level': player.upgrade_luck_level,
+            'upgrade_luck_cost': player.upgrade_luck_cost,
 
             'wooden_sword_per_click': player.wooden_sword_per_click,
             'upgrade_wooden_sword_cost': player.upgrade_wooden_sword_cost,
@@ -360,4 +367,23 @@ def buy_crossbow_upgrade(request):
             'upgrade_crossbow_level': player.upgrade_crossbow_level,
             'points_per_click': player.points_per_click,
             'upgrade_crossbow_cost': player.upgrade_crossbow_cost
+        })
+
+
+def buy_luck_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.points >= player.upgrade_luck_cost:
+            player.points -= player.upgrade_luck_cost
+            player.upgrade_luck_level += 1
+            player.luck += 1
+            player.upgrade_luck_cost *= 3
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'luck': player.luck,
+            'upgrade_luck_level': player.upgrade_luck_level,
+            'upgrade_luck_cost': player.upgrade_luck_cost
         })

@@ -430,6 +430,30 @@ function buyMultiplierUpgrade() {
     });
 }
 
+
+function buyLuckUpgrade() {
+    fetch('/buy-luck/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('luck').innerText = data.luck;
+        document.getElementById('upgrade_luck_level').innerText = data.upgrade_luck_level;
+        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost;
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
 setInterval(() => {
     const points_per_second = parseInt(document.getElementById("points_per_second").innerText);
     const pointsEl = document.getElementById("points");
