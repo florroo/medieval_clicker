@@ -11,6 +11,11 @@ class Player(models.Model):
     player_rebirth = models.IntegerField(default=0)
     player_rebirth_cost = models.IntegerField(default=1000000)
     player_level = models.IntegerField(default=0)
+    player_total_clicks = models.IntegerField(default=0)
+    player_total_clicks_earned = models.BigIntegerField(default=0)
+    player_total_crits = models.IntegerField(default=0)
+    player_total_crits_earned = models.BigIntegerField(default=0)
+    player_total_both_earned = models.BigIntegerField(default=0)
 
     luck = models.IntegerField(default=0)
     upgrade_luck_cost = models.IntegerField(default=200)
@@ -21,7 +26,7 @@ class Player(models.Model):
     upgrade_time_offline_cost = models.IntegerField(default=300)
     upgrade_time_offline_level = models.IntegerField(default=0)
 
-    shekel_multiplier = models.FloatField(default=1.0)
+    shekel_multiplier = models.IntegerField(default=10)
     upgrade_shekel_multiplier_cost = models.IntegerField(default=500)
     upgrade_shekel_multiplier_level = models.IntegerField(default=0)
 

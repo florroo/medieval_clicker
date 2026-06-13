@@ -10,6 +10,30 @@ function playClickSound() {
     sound.play();
 }
 
+function openStats() {
+    document.getElementById('stats-modal').style.display = 'flex';
+    fetchStats();
+    statsInterval = setInterval(fetchStats, 2000);
+}
+
+function closeStats() {
+    document.getElementById('stats-modal').style.display = 'none';
+    clearInterval(statsInterval);
+    statsInterval = null;
+}
+
+function fetchStats() {
+    fetch('/stats/')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('stat_total_clicks').innerText = data.player_total_clicks;
+            document.getElementById('stat_clicks_earned').innerText = data.player_total_clicks_earned;
+            document.getElementById('stat_total_crits').innerText = data.player_total_crits;
+            document.getElementById('stat_crits_earned').innerText = data.player_total_crits_earned;
+            document.getElementById('stat_both_earned').innerText = data.player_total_both_earned;
+        });
+}
+
 function closeOfflineModal() {
   document.getElementById('offline-modal').style.display = 'none';
   sessionStorage.setItem('offlineModalShown', 'true');

@@ -47,10 +47,17 @@ def click_ajax(request):
             is_crit = random.randint(1, 100) <= player.crit_chance
             if is_crit:
                 gained_points = player.points_per_click * player.crit_multiplier
+                player.player_total_crits += 1
+                player.player_total_crits_earned += gained_points
             else:
                 gained_points = player.points_per_click
+                player.player_total_clicks_earned += gained_points
             player.points += gained_points
             player.last_seen = timezone.now()
+
+            player.player_total_clicks += 1
+            player.player_total_both_earned += gained_points
+
             player.save()
 
         return JsonResponse({
@@ -60,6 +67,18 @@ def click_ajax(request):
             'is_crit': is_crit,
             'crit_multiplier': player.crit_multiplier,
         })
+
+
+def get_stats(request):
+    player = Player.objects.first()
+    return JsonResponse({
+        'player_total_clicks': player.player_total_clicks,
+        'player_total_clicks_earned': player.player_total_clicks_earned,
+        'player_total_crits': player.player_total_crits,
+        'player_total_crits_earned': player.player_total_crits_earned,
+        'player_total_both_earned': player.player_total_both_earned,
+    })
+
 
 def buy_upgrade(request):
     if request.method == "POST":
@@ -370,6 +389,11 @@ def reset_game(request):
         player.points_per_click = 1
         player.upgrade_cost = 10
         player.upgrade_level = 0
+        player.player_total_clicks = 0
+        player.player_total_clicks_earned = 0
+        player.player_total_crits = 0
+        player.player_total_crits_earned = 0
+        player.player_total_both_earned = 0
 
         player.luck = 0
         player.upgrade_luck_level = 0
@@ -379,7 +403,7 @@ def reset_game(request):
         player.upgrade_time_offline_cost = 300
         player.upgrade_time_offline_level = 0
 
-        player.shekel_multiplier = 1
+        player.shekel_multiplier = 10
         player.upgrade_shekel_multiplier_level = 0
         player.upgrade_shekel_multiplier_cost = 500
 
@@ -470,6 +494,12 @@ def reset_game(request):
             'points_per_click': player.points_per_click,
             'upgrade_cost': player.upgrade_cost,
             'upgrade_level': player.upgrade_level,
+
+            'player_total_clicks': player.player_total_clicks,
+            'player_total_clicks_earned': player.player_total_clicks_earned,
+            'player_total_crits': player.player_total_crits,
+            'player_total_both_earned': player.player_total_both_earned,
+            'player_total_crits_earned': player.player_total_crits_earned,
 
             'luck': player.luck,
             'upgrade_luck_level': player.upgrade_luck_level,
@@ -872,7 +902,7 @@ def buy_shekel_multiplier_upgrade(request):
         if player.points >= player.upgrade_shekel_multiplier_cost:
             player.points -= player.upgrade_shekel_multiplier_cost
             player.upgrade_shekel_multiplier_level += 1
-            player.shekel_multiplier += 0.1
+            player.shekel_multiplier += 1
             player.upgrade_shekel_multiplier_cost *= 3
             player.save()
 

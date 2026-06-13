@@ -57,10 +57,24 @@
                 </span>
             </span>
 
-        mnoznik: <span id="shekel_multiplier">{{ player.shekel_multiplier }}</span>x
+        mnoznik: <span id="shekel_multiplier">{{ player.shekel_multiplier }}</span>%
             <span class="tooltip">💲
                 <span class="tooltip-text">
                     Mnoznik szekli ktore otrzymujesz 
+                </span>
+            </span>
+
+        podatek: <span id="tax">{{ player.tax }}</span>
+            <span class="tooltip">👑
+                <span class="tooltip-text">
+                    Dodatkowy dochod co 5 minut
+                </span>
+            </span>
+
+        kliki: <span id="anchor">{{ player.anchor }}</span>
+            <span class="tooltip">⚓
+                <span class="tooltip-text">
+                    Co tyle klikniec otrzymasz dodatkowy bonus w ilosci
                 </span>
             </span>
         <BR>
@@ -392,6 +406,26 @@
 
                 <button onclick="buyShekelMultiplierUpgrade()"><span id="upgrade_shekel_multiplier_cost">{{ player.upgrade_shekel_multiplier_cost }} </span> szekli</button>
             </div>
+
+            
+            <div class="tax_upgrade crit-block">
+                <img src="{% static 'game/images/tax.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_tax_level">{{ player.upgrade_tax_level }}</span></p>
+                <p>Wiecej kasy ( 👑)</p>
+
+                <button onclick="buyTaxUpgrade()"><span id="upgrade_tax_cost">{{ player.upgrade_tax_cost }} </span> szekli</button>
+            </div>
+
+
+            <div class="anchor_upgrade crit-block">
+                <img src="{% static 'game/images/anchor.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_anchor_level">{{ player.upgrade_anchor_level }}</span></p>
+                <p>Klikniecia (-1000 ⚓)</p>
+
+                <button onclick="buyAnchorUpgrade()"><span id="upgrade_anchor_cost">{{ player.upgrade_anchor_cost }} </span> szekli</button>
+            </div>
         </div>
     </div>
 
@@ -407,6 +441,22 @@
             <button onclick="toggleMode()" class="toggle_btn" id="mode_btn"> Dark mode </button>
 
             <button onclick="toggleFont()" class="font_btn" id="font_btn"> Default font </button>
+
+            <button onclick="openStats()" class="stats_btn">Statystyki</button>
+
+            <div id="stats-modal" class="modal-overlay" style="display:none;">
+                <div class="modal-box">
+                    <h2>📊 Twoje statystyki</h2>
+
+                    <p>🖱️ Laczne klikniecia: <span id="stat_total_clicks">0</span></p>
+                    <p>⚔️ Szekle z klika: <span id="stat_clicks_earned">0</span></p>
+                    <p>💥 Laczne krytyki: <span id="stat_total_crits">0</span></p>
+                    <p>🧨 Szekle z krytykow:<span id="stat_crits_earned">0</span></p>
+                    <p>💰 Lacznie z klikania: <span id="stat_both_earned">0</span></p>
+
+                    <button onclick="closeStats()">Zamknij</button>
+                </div>
+            </div>
         </div>
 
 

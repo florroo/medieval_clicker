@@ -5,7 +5,8 @@ urlpatterns = [
     path('', views.click_view, name='click'),
     path('click/', views.click_ajax, name='click_ajax'),
     path('reset/', views.reset_game, name='reset_game'),
-
+    path('stats/', views.get_stats, name='get_stats'),
+    
     # per click
     path('buy/', views.buy_upgrade, name='buy_upgrade'),
     path('buy-wooden-sword/', views.buy_wooden_sword_upgrade, name='buy_wooden_sword_upgrade'),
