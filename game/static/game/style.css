@@ -65,16 +65,22 @@ body.dark ::-webkit-scrollbar-track {
 .click_upgrades {
     display: flex;
     gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
     margin-bottom: 50px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
 }
 
 
 .sps_upgrades {
     display: flex;
-    justify-content: space-around;
+    gap: 20px;
     margin-bottom: 50px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
 }
 
 .other_upgrades {
@@ -250,7 +256,6 @@ body.dark .weapon-image {
 }
 
 .lock-overlay {
-
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.7);
@@ -261,4 +266,48 @@ body.dark .weapon-image {
     font-size: 18px;
     z-index: 10;
     border-radius: 10px;
+}
+
+
+.modal-overlay {
+    position: fixed; 
+    inset: 0;
+    background: rgba(56, 55, 55, 0.6);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #4a2e14;
+    border: 2px solid gold;
+    border-radius: 16px;
+    padding: 30px 40px;
+    text-align: center;
+    color: white;
+}
+
+.modal-earned {
+    font-size: 32px;
+    font-weight: bold;
+    color: gold;
+    margin: 20px;
+}
+
+.modal-time { 
+    color: #000000; 
+    font-size: 17px; 
+}
+
+.modal-box button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: gold;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 20px;
 }

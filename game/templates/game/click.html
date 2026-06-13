@@ -71,6 +71,18 @@
                     Szekle na sekunde
                 </span>
             </span>
+
+        {% if offline_earned > 0 %}
+            <div id="offline-modal" class="modal-overlay">
+                <div class="modal-box">
+                    <h2>💰 Witaj z powrotem!</h2>
+                    <p>Podczas Twojej nieobecności zarobiłeś:</p>
+                    <p class="modal-earned">{{ offline_earned }} szekli</p>
+                    <p class="modal-time">(przez {{ offline_minutes }} minut)</p>
+                    <button onclick="closeOfflineModal()">Odbierz!</button>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <h3 class="break">Click upgrades</h3>
@@ -151,20 +163,186 @@
                 <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
             </div>
 
+            <div class="click_spear_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/spear.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_spear_level">{{ player.upgrade_spear_level }}</span></p>
+                <p>Kusza (+200 do spc 💥)</p>
+
+                <button onclick="buySpearUpgrade()"><span id="upgrade_spear_cost">{{ player.upgrade_spear_cost }} </span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="click_shield_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/shield.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_shield_level">{{ player.upgrade_shield_level }}</span></p>
+                <p>Kusza (+500 do spc 💥)</p>
+
+                <button onclick="buyShieldUpgrade()"><span id="upgrade_shield_cost">{{ player.upgrade_shield_cost }} </span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+                <div class="click_warhammer_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/warhammer.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_warhammer_level">{{ player.upgrade_warhammer_level }}</span></p>
+                <p>Kusza (+1000 do spc 💥)</p>
+
+                <button onclick="buyWarhammerUpgrade()"><span id="upgrade_warhammer_cost">{{ player.upgrade_warhammer_cost }} </span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
         </div>
 
         <h3>Auto upgrades</h3>
         <div class="sps_upgrades">
-            <div class="groom_upgrade">
-                <img src="{% static 'game/images/groom.png' %}" class="weapon-image">
+            <div class="peasant_upgrade upgrade-block" data-required-player-level="0">
+                <img src="{% static 'game/images/peasant.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_auto_level">{{ player.upgrade_auto_level }}</span></p>
-                <p>Stajenny (+1 do sps 🕐)</p>
+                <p>Chlop (+1 do sps 🕐)</p>
 
                 <button onclick="buyAutoUpgrade()"><span id="auto_upgrade_cost">{{ player.auto_upgrade_cost }}</span> szekli</button>
             </div>
 
+            <div class="drunk_upgrade upgrade-block" data-required-player-level="10">
+                <img src="{% static 'game/images/drunk.png' %}" class="weapon-image">
 
+                <p>Obecny poziom: <span id="upgrade_drunk_level">{{ player.upgrade_drunk_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyDrunkUpgrade()"><span id="upgrade_drunk_cost">{{ player.upgrade_drunk_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="maid_upgrade upgrade-block" data-required-player-level="20">
+                <img src="{% static 'game/images/maid.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_maid_level">{{ player.upgrade_maid_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyMaidUpgrade()"><span id="upgrade_maid_cost">{{ player.upgrade_maid_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+
+            <div class="groom_upgrade upgrade-block" data-required-player-level="30">
+                <img src="{% static 'game/images/groom.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_groom_level">{{ player.upgrade_groom_level }}</span></p>
+                <p>Stajenny (+5 do sps 🕐)</p>
+
+                <button onclick="buyGroomUpgrade()"><span id="upgrade_groom_cost">{{ player.upgrade_groom_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="jester_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/jester.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_jester_level">{{ player.upgrade_jester_level }}</span></p>
+                <p>Stajenny (+5 do sps 🕐)</p>
+
+                <button onclick="buyJesterUpgrade()"><span id="upgrade_jester_cost">{{ player.upgrade_jester_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="priest_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/priest.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_priest_level">{{ player.upgrade_priest_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyPriestUpgrade()"><span id="upgrade_priest_cost">{{ player.upgrade_priest_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="archer_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/archer.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_archer_level">{{ player.upgrade_archer_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyArcherUpgrade()"><span id="upgrade_archer_cost">{{ player.upgrade_archer_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+
+            <div class="knight_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/knight.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_knight_level">{{ player.upgrade_knight_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyKnightUpgrade()"><span id="upgrade_knight_cost">{{ player.upgrade_knight_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="cavalry_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/cavalry.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_cavalry_level">{{ player.upgrade_cavalry_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyCavalryUpgrade()"><span id="upgrade_cavalry_cost">{{ player.upgrade_cavalry_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="architect_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/architect.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_architect_level">{{ player.upgrade_architect_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyArchitectUpgrade()"><span id="upgrade_architect_cost">{{ player.upgrade_architect_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="baron_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/baron.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_baron_level">{{ player.upgrade_baron_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyBaronUpgrade()"><span id="upgrade_baron_cost">{{ player.upgrade_baron_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            <div class="king_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/king.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_king_level">{{ player.upgrade_king_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyKingUpgrade()"><span id="upgrade_king_cost">{{ player.upgrade_king_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
+
+            
+            <div class="pope_upgrade upgrade-block" data-required-player-level="50">
+                <img src="{% static 'game/images/pope.png' %}" class="weapon-image">
+
+                <p>Obecny poziom: <span id="upgrade_pope_level">{{ player.upgrade_pope_level }}</span></p>
+                <p>Sluzaca (+5 do sps 🕐)</p>
+
+                <button onclick="buyPopeUpgrade()"><span id="upgrade_pope_cost">{{ player.upgrade_pope_cost }}</span> szekli</button>
+
+                <div class="lock-overlay">🔒 Wymagany poziom&nbsp;<span class="required-level-text"></span></div>
+            </div>
         </div>
 
         <h3>Other upgrades</h3>
@@ -238,7 +416,6 @@
         
         </div>
     </div>
-
 
     <audio id="bg_music" loop>
         <source src="{% static 'game/bg_music.mp3' %}" type="audio/mpeg">

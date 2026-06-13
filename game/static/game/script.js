@@ -10,6 +10,18 @@ function playClickSound() {
     sound.play();
 }
 
+function closeOfflineModal() {
+  document.getElementById('offline-modal').style.display = 'none';
+  sessionStorage.setItem('offlineModalShown', 'true');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('offline-modal');
+  if (modal && sessionStorage.getItem('offlineModalShown') === 'true') {
+    modal.style.display = 'none';
+  }
+});
+
 function sendClick(event) {
     fetch('/click/', {
         method: 'POST',
@@ -233,6 +245,81 @@ function buyCrossbowUpgrade() {
     });
 }
 
+function buySpearUpgrade() {
+    fetch('/buy-spear/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_spear_level').innerHTML = data.upgrade_spear_level;
+        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyShieldUpgrade() {
+    fetch('/buy-shield/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_shield_level').innerHTML = data.upgrade_shield_level;
+        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyWarhammerUpgrade() {
+    fetch('/buy-warhammer/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('upgrade_warhammer_level').innerHTML = data.upgrade_warhammer_level;
+        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
 
 function resetGame() {
     if (!confirm("Na pewno chcesz zresetować progres?")) return;
@@ -298,9 +385,54 @@ function resetGame() {
         document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
         document.getElementById('upgrade_crossbow_level').innerText = data.upgrade_crossbow_level;
 
+        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost;
+        document.getElementById('upgrade_spear_level').innerText = data.upgrade_spear_level;
+
+        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost;
+        document.getElementById('upgrade_shield_level').innerText = data.upgrade_shield_level;
+
+        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost;
+        document.getElementById('upgrade_warhammer_level').innerText = data.upgrade_warhammer_level;
+
         // auto income 
         document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
+
+        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost;
+        document.getElementById('upgrade_drunk_level').innerText = data.upgrade_drunk_level;
+
+        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost;
+        document.getElementById('upgrade_maid_level').innerText = data.upgrade_maid_level;
+
+        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost;
+        document.getElementById('upgrade_groom_level').innerText = data.upgrade_groom_level;
+
+        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost;
+        document.getElementById('upgrade_jester_level').innerText = data.upgrade_jester_level;
+
+        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost;
+        document.getElementById('upgrade_priest_level').innerText = data.upgrade_priest_level;
+
+        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost;
+        document.getElementById('upgrade_archer_level').innerText = data.upgrade_archer_level;
+
+        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost;
+        document.getElementById('upgrade_knight_level').innerText = data.upgrade_knight_level;
+
+        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost;
+        document.getElementById('upgrade_cavalry_level').innerText = data.upgrade_cavalry_level;
+
+        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost;
+        document.getElementById('upgrade_architect_level').innerText = data.upgrade_architect_level;
+
+        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost;
+        document.getElementById('upgrade_baron_level').innerText = data.upgrade_baron_level;
+
+        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost;
+        document.getElementById('upgrade_king_level').innerText = data.upgrade_king_level;
+
+        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost;
+        document.getElementById('upgrade_pope_level').innerText = data.upgrade_pope_level;
 
         updateUpgradeLocks();
         updateTitle(data.points);
@@ -384,6 +516,311 @@ function buyAutoUpgrade() {
         document.getElementById('points_per_second').innerText = data.points_per_second;
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
         document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyDrunkUpgrade() {
+    fetch('/buy-drunk/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_drunk_level').innerText = data.upgrade_drunk_level;
+        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyMaidUpgrade() {
+    fetch('/buy-maid/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_maid_level').innerText = data.upgrade_maid_level;
+        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyGroomUpgrade() {
+    fetch('/buy-groom/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_groom_level').innerText = data.upgrade_groom_level;
+        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyJesterUpgrade() {
+    fetch('/buy-jester/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_jester_level').innerText = data.upgrade_jester_level;
+        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyPriestUpgrade() {
+    fetch('/buy-priest/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_priest_level').innerText = data.upgrade_priest_level;
+        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyArcherUpgrade() {
+    fetch('/buy-archer/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_archer_level').innerText = data.upgrade_archer_level;
+        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyKnightUpgrade() {
+    fetch('/buy-knight/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_knight_level').innerText = data.upgrade_knight_level;
+        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyCavalryUpgrade() {
+    fetch('/buy-cavalry/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_cavalry_level').innerText = data.upgrade_cavalry_level;
+        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyArchitectUpgrade() {
+    fetch('/buy-architect/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_architect_level').innerText = data.upgrade_architect_level;
+        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyBaronUpgrade() {
+    fetch('/buy-baron/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_baron_level').innerText = data.upgrade_baron_level;
+        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+function buyKingUpgrade() {
+    fetch('/buy-king/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_king_level').innerText = data.upgrade_king_level;
+        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost;
+        document.getElementById('player_level').innerText = data.player_level;
+
+        updateUpgradeLocks();
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
+
+function buyPopeUpgrade() {
+    fetch('/buy-pope/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points;
+        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('upgrade_pope_level').innerText = data.upgrade_pope_level;
+        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost;
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();

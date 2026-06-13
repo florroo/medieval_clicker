@@ -2,38 +2,56 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Player
 import random
+from django.db import transaction
+from django.contrib import messages
 from django.utils import timezone
 
 def click_view(request):
-    player = Player.objects.first()
-
-    if request.method == "POST":
-        player.points += player.points_per_click
+    with transaction.atomic():
+        player = Player.objects.select_for_update().first()
+        now = timezone.now()
+        earned = 0
+        offline_minutes = 0
+        if player.last_seen:
+            offline_seconds = (now - player.last_seen).total_seconds()
+            max_seconds = player.time_offline * 3600
+            offline_seconds = min(offline_seconds, max_seconds)
+            earned = int(offline_seconds * player.points_per_second)
+            offline_minutes = int(offline_seconds // 60)
+            player.points += earned
+        player.last_seen = now
+        player.last_click = now
         player.save()
-        return redirect('click')
 
-    return render(request, 'game/click.html', {'player': player} )
-
-
-from django.utils import timezone
+    return render(request, 'game/click.html', {
+        'player': player,
+        'offline_earned': earned,
+        'offline_minutes': offline_minutes,
+    })
 
 def click_ajax(request):
     if request.method == "POST":
-        player = Player.objects.first()
+        with transaction.atomic():
+            player = Player.objects.select_for_update().first()
+            now = timezone.now()
+            if player.last_click:
+                seconds = int((now - player.last_click).total_seconds())
+                if player.time_offline > 0:
+                    max_seconds = player.time_offline * 3600
+                    seconds = min(seconds, max_seconds)
+                else:
+                    seconds = 0
+                player.points += player.points_per_second * seconds
+            player.last_click = now
 
-        now = timezone.now()
-        if player.last_click:
-            seconds = int((now - player.last_click).total_seconds())
-            player.points += player.points_per_second * seconds
-        player.last_click = now
-
-        is_crit = random.randint(1, 100) <= player.crit_chance
-        if is_crit:
-            gained_points = player.points_per_click * player.crit_multiplier
-        else:
-            gained_points = player.points_per_click
-        player.points += gained_points
-        player.save()
+            is_crit = random.randint(1, 100) <= player.crit_chance
+            if is_crit:
+                gained_points = player.points_per_click * player.crit_multiplier
+            else:
+                gained_points = player.points_per_click
+            player.points += gained_points
+            player.last_seen = timezone.now()
+            player.save()
 
         return JsonResponse({
             'points': player.points,
@@ -43,7 +61,6 @@ def click_ajax(request):
             'crit_multiplier': player.crit_multiplier,
         })
 
-
 def buy_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
@@ -52,7 +69,7 @@ def buy_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_cost
             player.upgrade_level += 1
-            player.points_per_click += 1
+            player.points_per_click += player.upgrade_per_click
             player.upgrade_cost *= 2
             player.save()
 
@@ -64,6 +81,284 @@ def buy_upgrade(request):
             'upgrade_cost': player.upgrade_cost
         })
 
+def buy_drunk_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_drunk_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_drunk_cost
+            player.upgrade_drunk_level += 1
+            player.points_per_second += player.drunk_per_second
+            player.upgrade_drunk_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_drunk_level': player.upgrade_drunk_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_drunk_cost': player.upgrade_drunk_cost
+        })
+
+def buy_maid_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_maid_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_maid_cost
+            player.upgrade_maid_level += 1
+            player.points_per_second += player.maid_per_second
+            player.upgrade_maid_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_maid_level': player.upgrade_maid_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_maid_cost': player.upgrade_maid_cost
+        })
+
+
+def buy_groom_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_groom_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_groom_cost
+            player.upgrade_groom_level += 1
+            player.points_per_second += player.groom_per_second
+            player.upgrade_groom_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_groom_level': player.upgrade_groom_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_groom_cost': player.upgrade_groom_cost
+        })
+
+def buy_jester_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_jester_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_jester_cost
+            player.upgrade_jester_level += 1
+            player.points_per_second += player.jester_per_second
+            player.upgrade_jester_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_jester_level': player.upgrade_jester_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_jester_cost': player.upgrade_jester_cost
+        })
+
+def buy_priest_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_priest_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_priest_cost
+            player.upgrade_priest_level += 1
+            player.points_per_second += player.priest_per_second
+            player.upgrade_priest_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_priest_level': player.upgrade_priest_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_priest_cost': player.upgrade_priest_cost
+        })
+
+def buy_archer_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_archer_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_archer_cost
+            player.upgrade_archer_level += 1
+            player.points_per_second += player.archer_per_second
+            player.upgrade_archer_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_archer_level': player.upgrade_archer_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_archer_cost': player.upgrade_archer_cost
+        })
+
+
+def buy_knight_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_knight_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_knight_cost
+            player.upgrade_knight_level += 1
+            player.points_per_second += player.knight_per_second
+            player.upgrade_knight_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_knight_level': player.upgrade_knight_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_knight_cost': player.upgrade_knight_cost
+        })
+
+def buy_cavalry_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_cavalry_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_cavalry_cost
+            player.upgrade_cavalry_level += 1
+            player.points_per_second += player.cavalry_per_second
+            player.upgrade_cavalry_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_cavalry_level': player.upgrade_cavalry_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_cavalry_cost': player.upgrade_cavalry_cost
+        })
+
+def buy_architect_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_architect_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_architect_cost
+            player.upgrade_architect_level += 1
+            player.points_per_second += player.architect_per_second
+            player.upgrade_architect_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_architect_level': player.upgrade_architect_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_architect_cost': player.upgrade_architect_cost
+        })
+
+
+def buy_baron_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_baron_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_baron_cost
+            player.upgrade_baron_level += 1
+            player.points_per_second += player.baron_per_second
+            player.upgrade_baron_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_baron_level': player.upgrade_baron_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_baron_cost': player.upgrade_baron_cost
+        })
+
+def buy_king_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_king_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_king_cost
+            player.upgrade_king_level += 1
+            player.points_per_second += player.king_per_second
+            player.upgrade_king_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_king_level': player.upgrade_king_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_king_cost': player.upgrade_king_cost
+        })
+
+def buy_pope_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 5:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_pope_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_pope_cost
+            player.upgrade_pope_level += 1
+            player.points_per_second += player.pope_per_second
+            player.upgrade_pope_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'player_level': player.player_level,
+            'points': player.points,
+            'upgrade_pope_level': player.upgrade_pope_level,
+            'points_per_second': player.points_per_second,
+            'upgrade_pope_cost': player.upgrade_pope_cost
+        })
 
 def reset_game(request):
     if request.method == "POST":
@@ -107,6 +402,15 @@ def reset_game(request):
         player.upgrade_crossbow_cost = 10000
         player.upgrade_crossbow_level = 0
 
+        player.upgrade_spear_cost = 10000
+        player.upgrade_spear_level = 0
+
+        player.upgrade_shield_cost = 10000
+        player.upgrade_shield_level = 0
+
+        player.upgrade_warhammer_cost = 10000
+        player.upgrade_warhammer_level = 0
+
         # crit system
         player.crit_chance = 1
         player.crit_chance_upgrade_cost = 100
@@ -118,8 +422,45 @@ def reset_game(request):
 
         # auto click
         player.points_per_second = 0
+
         player.auto_upgrade_cost = 20
         player.upgrade_auto_level = 0
+
+        player.upgrade_drunk_cost = 20
+        player.upgrade_drunk_level = 0
+
+        player.upgrade_maid_cost = 20
+        player.upgrade_maid_level = 0
+
+        player.upgrade_groom_cost = 20
+        player.upgrade_groom_level = 0
+
+        player.upgrade_jester_cost = 20
+        player.upgrade_jester_level = 0
+
+        player.upgrade_priest_cost = 20
+        player.upgrade_priest_level = 0
+
+        player.upgrade_archer_cost = 20
+        player.upgrade_archer_level = 0
+
+        player.upgrade_knight_cost = 20
+        player.upgrade_knight_level = 0
+
+        player.upgrade_cavalry_cost = 20
+        player.upgrade_cavalry_level = 0
+
+        player.upgrade_architect_cost = 20
+        player.upgrade_architect_level = 0
+
+        player.upgrade_baron_cost = 20
+        player.upgrade_baronlevel = 0
+
+        player.upgrade_king_cost = 20
+        player.upgrade_king_level = 0
+
+        player.upgrade_pope_cost = 20
+        player.upgrade_pope_level = 0
 
         player.save()
 
@@ -160,6 +501,15 @@ def reset_game(request):
             'upgrade_crossbow_cost': player.upgrade_crossbow_cost,
             'upgrade_crossbow_level': player.upgrade_crossbow_level,
 
+            'upgrade_spear_cost': player.upgrade_spear_cost,
+            'upgrade_spear_level': player.upgrade_spear_level,
+
+            'upgrade_shield_cost': player.upgrade_shield_cost,
+            'upgrade_shield_level': player.upgrade_shield_level,
+
+            'upgrade_warhammer_cost': player.upgrade_warhammer_cost,
+            'upgrade_warhammer_level': player.upgrade_warhammer_level,
+
             'crit_chance': player.crit_chance,
             'crit_chance_upgrade_cost': player.crit_chance_upgrade_cost,
             'upgrade_crit_chance_level': player.upgrade_crit_chance_level,
@@ -169,8 +519,45 @@ def reset_game(request):
             'upgrade_crit_multiplier_level': player.upgrade_crit_multiplier_level,
 
             'points_per_second': player.points_per_second,
+
             'auto_upgrade_cost': player.auto_upgrade_cost,
             'upgrade_auto_level': player.upgrade_auto_level,
+
+            'upgrade_drunk_cost': player.upgrade_drunk_cost,
+            'upgrade_drunk_level': player.upgrade_drunk_level,
+
+            'upgrade_maid_cost': player.upgrade_maid_cost,
+            'upgrade_maid_level': player.upgrade_maid_level,
+
+            'upgrade_groom_cost': player.upgrade_groom_cost,
+            'upgrade_groom_level': player.upgrade_groom_level,
+
+            'upgrade_jester_cost': player.upgrade_jester_cost,
+            'upgrade_jester_level': player.upgrade_jester_level,
+
+            'upgrade_priest_cost': player.upgrade_priest_cost,
+            'upgrade_priest_level': player.upgrade_priest_level,
+
+            'upgrade_archer_cost': player.upgrade_archer_cost,
+            'upgrade_archer_level': player.upgrade_archer_level,
+
+            'upgrade_knight_cost': player.upgrade_knight_cost,
+            'upgrade_knight_level': player.upgrade_knight_level,
+
+            'upgrade_cavalry_cost': player.upgrade_cavalry_cost,
+            'upgrade_cavalry_level': player.upgrade_cavalry_level,
+
+            'upgrade_architect_cost': player.upgrade_architect_cost,
+            'upgrade_architect_level': player.upgrade_architect_level,
+
+            'upgrade_baron_cost': player.upgrade_baron_cost,
+            'upgrade_baron_level': player.upgrade_baron_level,
+
+            'upgrade_king_cost': player.upgrade_king_cost,
+            'upgrade_king_level': player.upgrade_king_level,
+
+            'upgrade_pope_cost': player.upgrade_pope_cost,
+            'upgrade_pope_level': player.upgrade_pope_level,
         })
 
 
@@ -178,16 +565,13 @@ def buy_auto_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        success = False
-
         if player.points >= player.auto_upgrade_cost:
             player.player_level += 1
             player.points -= player.auto_upgrade_cost
             player.upgrade_auto_level += 1
-            player.points_per_second += 1
+            player.points_per_second += player.auto_per_second
             player.auto_upgrade_cost *= 2
             player.save()
-            success = True
 
         return JsonResponse({
             'points': player.points,
@@ -195,7 +579,6 @@ def buy_auto_upgrade(request):
             'upgrade_auto_level': player.upgrade_auto_level,
             'points_per_second': player.points_per_second,
             'auto_upgrade_cost': player.auto_upgrade_cost,
-            'success': success
         })
 
 def buy_crit_chance_upgrade(request):
@@ -247,7 +630,7 @@ def buy_wooden_sword_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_wooden_sword_cost
             player.upgrade_wooden_sword_level += 1
-            player.points_per_click += 3
+            player.points_per_click += player.wooden_sword_per_click
             player.upgrade_wooden_sword_cost *= 2
             player.save()
 
@@ -270,7 +653,7 @@ def buy_short_sword_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_short_sword_cost
             player.upgrade_short_sword_level += 1
-            player.points_per_click += 5
+            player.points_per_click += player.short_sword_per_click
             player.upgrade_short_sword_cost *= 2
             player.save()
 
@@ -293,7 +676,7 @@ def buy_long_sword_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_long_sword_cost
             player.upgrade_long_sword_level += 1
-            player.points_per_click += 10
+            player.points_per_click += player.long_sword_per_click
             player.upgrade_long_sword_cost *= 2
             player.save()
 
@@ -316,7 +699,7 @@ def buy_slingshot_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_slingshot_cost
             player.upgrade_slingshot_level += 1
-            player.points_per_click += 25
+            player.points_per_click += player.slingshot_per_click
             player.upgrade_slingshot_cost *= 2
             player.save()
 
@@ -339,7 +722,7 @@ def buy_bow_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_bow_cost
             player.upgrade_bow_level += 1
-            player.points_per_click += 50
+            player.points_per_click += player.bow_per_click
             player.upgrade_bow_cost *= 2
             player.save()
 
@@ -362,7 +745,7 @@ def buy_crossbow_upgrade(request):
             player.player_level += 1
             player.points -= player.upgrade_crossbow_cost
             player.upgrade_crossbow_level += 1
-            player.points_per_click += 100
+            player.points_per_click += player.crossbow_per_click
             player.upgrade_crossbow_cost *= 2
             player.save()
 
@@ -372,6 +755,75 @@ def buy_crossbow_upgrade(request):
             'upgrade_crossbow_level': player.upgrade_crossbow_level,
             'points_per_click': player.points_per_click,
             'upgrade_crossbow_cost': player.upgrade_crossbow_cost
+        })
+
+def buy_spear_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 30:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_spear_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_spear_cost
+            player.upgrade_spear_level += 1
+            player.points_per_click += player.spear_per_click
+            player.upgrade_spear_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'player_level': player.player_level,
+            'upgrade_spear_level': player.upgrade_spear_level,
+            'points_per_click': player.points_per_click,
+            'upgrade_spear_cost': player.upgrade_spear_cost
+        })
+
+def buy_shield_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 30:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_shield_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_shield_cost
+            player.upgrade_shield_level += 1
+            player.points_per_click += player.shield_per_click
+            player.upgrade_shield_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'player_level': player.player_level,
+            'upgrade_shield_level': player.upgrade_shield_level,
+            'points_per_click': player.points_per_click,
+            'upgrade_shield_cost': player.upgrade_shield_cost
+        })
+
+def buy_warhammer_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.player_level < 30:
+            return JsonResponse({"error": "Locked"}, status=403)
+
+        if player.points >= player.upgrade_warhammer_cost:
+            player.player_level += 1
+            player.points -= player.upgrade_warhammer_cost
+            player.upgrade_warhammer_level += 1
+            player.points_per_click += player.warhammer_per_click
+            player.upgrade_warhammer_cost *= 2
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'player_level': player.player_level,
+            'upgrade_warhammer_level': player.upgrade_warhammer_level,
+            'points_per_click': player.points_per_click,
+            'upgrade_warhammer_cost': player.upgrade_warhammer_cost
         })
 
 
