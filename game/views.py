@@ -16,7 +16,9 @@ def click_view(request):
             offline_seconds = (now - player.last_seen).total_seconds()
             max_seconds = player.time_offline * 3600
             offline_seconds = min(offline_seconds, max_seconds)
-            earned = int(offline_seconds * player.points_per_second)
+            earned = offline_seconds * player.points_per_second
+            earned *= player.shekel_multiplier
+            earned = round(earned, 2)
             offline_minutes = int(offline_seconds // 60)
             player.points += earned
         player.last_seen = now
@@ -41,17 +43,24 @@ def click_ajax(request):
                     seconds = min(seconds, max_seconds)
                 else:
                     seconds = 0
-                player.points += player.points_per_second * seconds
+
+                gained_afk = player.points_per_second * seconds
+                gained_afk *= player.shekel_multiplier
+                player.points += gained_afk
+
             player.last_click = now
 
             is_crit = random.randint(1, 100) <= player.crit_chance
             if is_crit:
                 gained_points = player.points_per_click * player.crit_multiplier
+                gained_points *= player.shekel_multiplier
                 player.player_total_crits += 1
                 player.player_total_crits_earned += gained_points
             else:
                 gained_points = player.points_per_click
+                gained_points *= player.shekel_multiplier
                 player.player_total_clicks_earned += gained_points
+
             player.points += gained_points
             player.last_seen = timezone.now()
 
@@ -127,7 +136,7 @@ def buy_maid_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 10:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_maid_cost:
@@ -151,7 +160,7 @@ def buy_groom_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 15:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_groom_cost:
@@ -174,7 +183,7 @@ def buy_jester_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 20:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_jester_cost:
@@ -197,7 +206,7 @@ def buy_priest_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 30:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_priest_cost:
@@ -220,7 +229,7 @@ def buy_archer_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 40:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_archer_cost:
@@ -244,7 +253,7 @@ def buy_knight_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 50:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_knight_cost:
@@ -267,7 +276,7 @@ def buy_cavalry_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 60:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_cavalry_cost:
@@ -290,7 +299,7 @@ def buy_architect_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 70:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_architect_cost:
@@ -314,7 +323,7 @@ def buy_baron_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 80:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_baron_cost:
@@ -337,7 +346,7 @@ def buy_king_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 90:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_king_cost:
@@ -360,7 +369,7 @@ def buy_pope_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 5:
+        if player.player_level < 100:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_pope_cost:
@@ -385,105 +394,120 @@ def reset_game(request):
 
         # base stats
         player.player_level = 0
-        player.points = 0
-        player.points_per_click = 1
-        player.upgrade_cost = 10
+        player.points = 0.0
+        player.points_per_click = 1.0
+        player.upgrade_cost = 10.0
         player.upgrade_level = 0
         player.player_total_clicks = 0
-        player.player_total_clicks_earned = 0
+        player.player_total_clicks_earned = 0.0
         player.player_total_crits = 0
-        player.player_total_crits_earned = 0
-        player.player_total_both_earned = 0
+        player.player_total_crits_earned = 0.0
+        player.player_total_both_earned = 0.0
+        player.rebirth = 0
+        player.rebirth_cost = 1000000.0
+        player.rebirth_gems = 0.0
 
-        player.luck = 0
+        player.tax = 0.0
+        player.upgrade_tax_cost = 1000.0
+        player.upgrade_tax_level = 0
+
+        player.anchor = 10000.0
+        player.upgrade_anchor_cost = 3000.0
+        player.upgrade_anchor_level = 0
+
+        player.dragon_multiplier = 1.0
+        player.upgrade_dragon_multiplier_cost = 10000.0
+        player.upgrade_dragon_multiplier_level = 0
+
+        player.luck = 0.0
         player.upgrade_luck_level = 0
-        player.upgrade_luck_cost = 200
+        player.upgrade_luck_cost = 200.0
 
         player.time_offline = 0
-        player.upgrade_time_offline_cost = 300
+        player.upgrade_time_offline_cost = 300.0
         player.upgrade_time_offline_level = 0
 
-        player.shekel_multiplier = 10
+        player.shekel_multiplier = 1.0
         player.upgrade_shekel_multiplier_level = 0
-        player.upgrade_shekel_multiplier_cost = 500
+        player.upgrade_shekel_multiplier_cost = 500.0
 
         # weapons
-        player.upgrade_wooden_sword_cost = 100
+        player.upgrade_wooden_sword_cost = 100.0
         player.upgrade_wooden_sword_level = 0
 
-        player.upgrade_short_sword_cost = 500
+        player.upgrade_short_sword_cost = 500.0
         player.upgrade_short_sword_level = 0
 
-        player.upgrade_long_sword_cost = 1000
+        player.upgrade_long_sword_cost = 1000.0
         player.upgrade_long_sword_level = 0
 
-        player.upgrade_slingshot_cost = 2000
+        player.upgrade_slingshot_cost = 2000.0
         player.upgrade_slingshot_level = 0
 
-        player.upgrade_bow_cost = 5000
+        player.upgrade_bow_cost = 5000.0
         player.upgrade_bow_level = 0
 
-        player.upgrade_crossbow_cost = 10000
+        player.upgrade_crossbow_cost = 10000.0
         player.upgrade_crossbow_level = 0
 
-        player.upgrade_spear_cost = 10000
+        player.upgrade_spear_cost = 30000.0
         player.upgrade_spear_level = 0
 
-        player.upgrade_shield_cost = 10000
+        player.upgrade_shield_cost = 50000.0
         player.upgrade_shield_level = 0
 
-        player.upgrade_warhammer_cost = 10000
+        player.upgrade_warhammer_cost = 100000.0
         player.upgrade_warhammer_level = 0
 
         # crit system
-        player.crit_chance = 1
-        player.crit_chance_upgrade_cost = 100
+        player.crit_chance = 1.0
+        player.crit_chance_upgrade_cost = 100.0
         player.upgrade_crit_chance_level = 0
 
-        player.crit_multiplier = 2
-        player.crit_multiplier_upgrade_cost = 150
+        player.crit_multiplier = 2.0
+        player.crit_multiplier_upgrade_cost = 150.0
         player.upgrade_crit_multiplier_level = 0
 
         # auto click
-        player.points_per_second = 0
+        player.points_per_second = 0.0
 
-        player.auto_upgrade_cost = 20
+        player.auto_upgrade_cost = 20.0
         player.upgrade_auto_level = 0
 
-        player.upgrade_drunk_cost = 20
+        player.upgrade_drunk_cost = 100.0
         player.upgrade_drunk_level = 0
 
-        player.upgrade_maid_cost = 20
+        player.upgrade_maid_cost = 500.0
         player.upgrade_maid_level = 0
 
-        player.upgrade_groom_cost = 20
+        player.upgrade_groom_cost = 2000.0
         player.upgrade_groom_level = 0
 
-        player.upgrade_jester_cost = 20
+        player.upgrade_jester_cost = 5000.0
         player.upgrade_jester_level = 0
 
-        player.upgrade_priest_cost = 20
+        player.upgrade_priest_cost = 20000.0
         player.upgrade_priest_level = 0
 
-        player.upgrade_archer_cost = 20
+        player.upgrade_archer_cost = 50000.0
         player.upgrade_archer_level = 0
 
-        player.upgrade_knight_cost = 20
+        player.upgrade_knight_cost = 100000.0
         player.upgrade_knight_level = 0
 
-        player.upgrade_cavalry_cost = 20
+        player.upgrade_cavalry_cost = 400000.0
         player.upgrade_cavalry_level = 0
 
-        player.upgrade_architect_cost = 20
+        player.upgrade_architect_cost = 1000000.0
         player.upgrade_architect_level = 0
 
-        player.upgrade_baron_cost = 20
-        player.upgrade_baronlevel = 0
+        player.upgrade_baron_cost = 10000000.0
+        player.upgrade_baron_level = 0
 
-        player.upgrade_king_cost = 20
+        player.upgrade_king_cost = 30000000.0
         player.upgrade_king_level = 0
 
-        player.upgrade_pope_cost = 20
+        player.upgrade_pope_cost = 100000000.0
         player.upgrade_pope_level = 0
 
         player.save()
@@ -500,6 +524,22 @@ def reset_game(request):
             'player_total_crits': player.player_total_crits,
             'player_total_both_earned': player.player_total_both_earned,
             'player_total_crits_earned': player.player_total_crits_earned,
+
+            'rebirth': player.rebirth,
+            'rebirth_cost': player.rebirth_cost,
+            'rebirth_gems': player.rebirth_gems,
+
+            'tax': player.tax,
+            'upgrade_tax_cost': player.upgrade_tax_cost,
+            'upgrade_tax_level': player.upgrade_tax_level,
+
+            'anchor': player.anchor,
+            'upgrade_anchor_cost': player.upgrade_anchor_cost,
+            'upgrade_anchor_level': player.upgrade_anchor_level,
+
+            'dragon_multiplier': player.dragon_multiplier,
+            'upgrade_dragon_multiplier_cost': player.upgrade_dragon_multiplier_cost,
+            'upgrade_dragon_multiplier_level': player.upgrade_dragon_multiplier_level,
 
             'luck': player.luck,
             'upgrade_luck_level': player.upgrade_luck_level,
@@ -676,7 +716,7 @@ def buy_short_sword_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 10:
+        if player.player_level < 15:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_short_sword_cost:
@@ -699,7 +739,7 @@ def buy_long_sword_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 15:
+        if player.player_level < 25:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_long_sword_cost:
@@ -722,7 +762,7 @@ def buy_slingshot_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 20:
+        if player.player_level < 30:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_slingshot_cost:
@@ -745,7 +785,7 @@ def buy_bow_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 25:
+        if player.player_level < 40:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_bow_cost:
@@ -768,7 +808,7 @@ def buy_crossbow_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 30:
+        if player.player_level < 50:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_crossbow_cost:
@@ -791,7 +831,7 @@ def buy_spear_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 30:
+        if player.player_level < 70:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_spear_cost:
@@ -814,7 +854,7 @@ def buy_shield_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 30:
+        if player.player_level < 90:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_shield_cost:
@@ -837,7 +877,7 @@ def buy_warhammer_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.player_level < 30:
+        if player.player_level < 110:
             return JsonResponse({"error": "Locked"}, status=403)
 
         if player.points >= player.upgrade_warhammer_cost:
@@ -864,7 +904,7 @@ def buy_luck_upgrade(request):
         if player.points >= player.upgrade_luck_cost:
             player.points -= player.upgrade_luck_cost
             player.upgrade_luck_level += 1
-            player.luck += 1
+            player.luck += 1.0
             player.upgrade_luck_cost *= 3
             player.save()
 
@@ -902,7 +942,7 @@ def buy_shekel_multiplier_upgrade(request):
         if player.points >= player.upgrade_shekel_multiplier_cost:
             player.points -= player.upgrade_shekel_multiplier_cost
             player.upgrade_shekel_multiplier_level += 1
-            player.shekel_multiplier += 1
+            player.shekel_multiplier += 0.1
             player.upgrade_shekel_multiplier_cost *= 3
             player.save()
 

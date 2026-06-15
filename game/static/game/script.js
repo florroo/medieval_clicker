@@ -1,13 +1,15 @@
 
 function updateTitle(points) {
-    document.title = "Medieval Clicker - " + points;
+    document.title = "Medieval Clicker - " + Number(points).toFixed(2);
 }
 
+const clickSound = new Audio("/static/game/click.mp3");
+
 function playClickSound() {
-    const sound = new Audio("/static/game/click.mp3");
-    sound.volume = 0.1;
-    sound.playbackRate = 0.95 + Math.random() * 0.1;
-    sound.play();
+    clickSound.currentTime = 0;
+    clickSound.volume = 0.1;
+    clickSound.playbackRate = 0.95 + Math.random() * 0.1;
+    clickSound.play();
 }
 
 function openStats() {
@@ -27,23 +29,28 @@ function fetchStats() {
         .then(res => res.json())
         .then(data => {
             document.getElementById('stat_total_clicks').innerText = data.player_total_clicks;
-            document.getElementById('stat_clicks_earned').innerText = data.player_total_clicks_earned;
+            document.getElementById('stat_clicks_earned').innerText = data.player_total_clicks_earned.toFixed(2);
             document.getElementById('stat_total_crits').innerText = data.player_total_crits;
-            document.getElementById('stat_crits_earned').innerText = data.player_total_crits_earned;
-            document.getElementById('stat_both_earned').innerText = data.player_total_both_earned;
+            document.getElementById('stat_crits_earned').innerText = data.player_total_crits_earned.toFixed(2);
+            document.getElementById('stat_both_earned').innerText = data.player_total_both_earned.toFixed(2);
         });
 }
 
 function closeOfflineModal() {
-  document.getElementById('offline-modal').style.display = 'none';
-  sessionStorage.setItem('offlineModalShown', 'true');
+    document.getElementById('offline-modal').style.display = 'none';
+    sessionStorage.setItem('offlineModalShown', 'true');
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('offline-modal');
-  if (modal && sessionStorage.getItem('offlineModalShown') === 'true') {
-    modal.style.display = 'none';
-  }
+    const modal = document.getElementById('offline-modal');
+
+    if (!modal) return;
+
+    const shouldShow = modal.dataset.show === "1";
+
+    if (shouldShow && sessionStorage.getItem('offlineModalShown') !== 'true') {
+        modal.style.display = 'flex';
+    }
 });
 
 function sendClick(event) {
@@ -56,7 +63,7 @@ function sendClick(event) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
+        document.getElementById('points').innerText = data.points.toFixed(2);
         updateTitle(data.points);
 
         if (data.is_crit) {
@@ -102,10 +109,10 @@ function buyUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_level').innerHTML = data.upgrade_level;
-        document.getElementById('cost').innerText = data.upgrade_cost;
+        document.getElementById('cost').innerText = data.upgrade_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -128,10 +135,10 @@ function buyWoodenSwordUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_wooden_sword_level').innerHTML = data.upgrade_wooden_sword_level;
-        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -153,10 +160,10 @@ function buyShortSwordUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_short_sword_level').innerHTML = data.upgrade_short_sword_level;
-        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost;
+        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -179,10 +186,10 @@ function buyLongSwordUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_long_sword_level').innerHTML = data.upgrade_long_sword_level;
-        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost;
+        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -204,10 +211,10 @@ function buySlingshotUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_slingshot_level').innerHTML = data.upgrade_slingshot_level;
-        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost;
+        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -229,10 +236,10 @@ function buyBowUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_bow_level').innerHTML = data.upgrade_bow_level;
-        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost;
+        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -254,10 +261,10 @@ function buyCrossbowUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_crossbow_level').innerHTML = data.upgrade_crossbow_level;
-        document.getElementById('upgrade_crossbow_cost').innerText = data.upgrade_crossbow_cost;
+        document.getElementById('upgrade_crossbow_cost').innerText = data.upgrade_crossbow_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -279,10 +286,10 @@ function buySpearUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_spear_level').innerHTML = data.upgrade_spear_level;
-        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost;
+        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -304,10 +311,10 @@ function buyShieldUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_shield_level').innerHTML = data.upgrade_shield_level;
-        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost;
+        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -329,10 +336,10 @@ function buyWarhammerUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
         document.getElementById('upgrade_warhammer_level').innerHTML = data.upgrade_warhammer_level;
-        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost;
+        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -359,103 +366,103 @@ function resetGame() {
     .then(data => {
 
         // base stats
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_click').innerText = data.points_per_click;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_click').innerText = data.points_per_click.toFixed(2);
 
         document.getElementById('player_level').innerHTML = data.player_level;
 
-        document.getElementById('points_per_second').innerText = data.points_per_second;
-        document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
-        document.getElementById('crit_chance').innerText = data.crit_chance;
-        document.getElementById('luck').innerText = data.luck;
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
+        document.getElementById('crit_multiplier').innerText = data.crit_multiplier.toFixed(2);
+        document.getElementById('crit_chance').innerText = data.crit_chance.toFixed(2);
+        document.getElementById('luck').innerText = data.luck.toFixed(2);
         document.getElementById('time_offline').innerText = data.time_offline;
-        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier;
+        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier.toFixed(2);
 
-        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost;
+        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost.toFixed(2);
         document.getElementById('upgrade_time_offline_level').innerText = data.upgrade_time_offline_level;
 
-        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost;
+        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost.toFixed(2);
         document.getElementById('upgrade_shekel_multiplier_level').innerText = data.upgrade_shekel_multiplier_level;
 
-        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost;
+        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost.toFixed(2);
         document.getElementById('upgrade_luck_level').innerText = data.upgrade_luck_level;
 
         // crit system 
-        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
+        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost.toFixed(2);
         document.getElementById('upgrade_crit_chance_level').innerText = data.upgrade_crit_chance_level;
 
-        document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost;
+        document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost.toFixed(2);
         document.getElementById('upgrade_crit_multiplier_level').innerText = data.upgrade_crit_multiplier_level;
 
         // click income
-        document.getElementById('cost').innerText = data.upgrade_cost;
+        document.getElementById('cost').innerText = data.upgrade_cost.toFixed(2);
         document.getElementById('upgrade_level').innerText = data.upgrade_level;
 
-        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost.toFixed(2);
         document.getElementById('upgrade_wooden_sword_level').innerText = data.upgrade_wooden_sword_level;
 
-        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost;
+        document.getElementById('upgrade_short_sword_cost').innerText = data.upgrade_short_sword_cost.toFixed(2);
         document.getElementById('upgrade_short_sword_level').innerText = data.upgrade_short_sword_level;
 
-        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost;
+        document.getElementById('upgrade_long_sword_cost').innerText = data.upgrade_long_sword_cost.toFixed(2);
         document.getElementById('upgrade_long_sword_level').innerText = data.upgrade_long_sword_level;
 
-        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost;
+        document.getElementById('upgrade_slingshot_cost').innerText = data.upgrade_slingshot_cost.toFixed(2);
         document.getElementById('upgrade_slingshot_level').innerText = data.upgrade_slingshot_level;
 
-        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost;
+        document.getElementById('upgrade_bow_cost').innerText = data.upgrade_bow_cost.toFixed(2);
         document.getElementById('upgrade_bow_level').innerText = data.upgrade_bow_level;
 
-        document.getElementById('upgrade_wooden_sword_cost').innerText = data.upgrade_wooden_sword_cost;
+        document.getElementById('upgrade_crossbow_cost').innerText = data.upgrade_crossbow_cost.toFixed(2);
         document.getElementById('upgrade_crossbow_level').innerText = data.upgrade_crossbow_level;
 
-        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost;
+        document.getElementById('upgrade_spear_cost').innerText = data.upgrade_spear_cost.toFixed(2);
         document.getElementById('upgrade_spear_level').innerText = data.upgrade_spear_level;
 
-        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost;
+        document.getElementById('upgrade_shield_cost').innerText = data.upgrade_shield_cost.toFixed(2);
         document.getElementById('upgrade_shield_level').innerText = data.upgrade_shield_level;
 
-        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost;
+        document.getElementById('upgrade_warhammer_cost').innerText = data.upgrade_warhammer_cost.toFixed(2);
         document.getElementById('upgrade_warhammer_level').innerText = data.upgrade_warhammer_level;
 
         // auto income 
-        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
+        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost.toFixed(2);
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
 
-        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost;
+        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost.toFixed(2);
         document.getElementById('upgrade_drunk_level').innerText = data.upgrade_drunk_level;
 
-        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost;
+        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost.toFixed(2);
         document.getElementById('upgrade_maid_level').innerText = data.upgrade_maid_level;
 
-        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost;
+        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost.toFixed(2);
         document.getElementById('upgrade_groom_level').innerText = data.upgrade_groom_level;
 
-        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost;
+        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost.toFixed(2);
         document.getElementById('upgrade_jester_level').innerText = data.upgrade_jester_level;
 
-        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost;
+        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost.toFixed(2);
         document.getElementById('upgrade_priest_level').innerText = data.upgrade_priest_level;
 
-        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost;
+        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost.toFixed(2);
         document.getElementById('upgrade_archer_level').innerText = data.upgrade_archer_level;
 
-        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost;
+        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost.toFixed(2);
         document.getElementById('upgrade_knight_level').innerText = data.upgrade_knight_level;
 
-        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost;
+        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost.toFixed(2);
         document.getElementById('upgrade_cavalry_level').innerText = data.upgrade_cavalry_level;
 
-        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost;
+        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost.toFixed(2);
         document.getElementById('upgrade_architect_level').innerText = data.upgrade_architect_level;
 
-        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost;
+        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost.toFixed(2);
         document.getElementById('upgrade_baron_level').innerText = data.upgrade_baron_level;
 
-        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost;
+        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost.toFixed(2);
         document.getElementById('upgrade_king_level').innerText = data.upgrade_king_level;
 
-        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost;
+        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost.toFixed(2);
         document.getElementById('upgrade_pope_level').innerText = data.upgrade_pope_level;
 
         updateUpgradeLocks();
@@ -470,8 +477,8 @@ const musicBtn = document.getElementById("music_btn");
 
 function updateButton() {
     musicBtn.innerText = music.paused
-        ? "Włącz muzykę"
-        : "Wyłącz muzykę";
+        ? "Wlacz muzyke"
+        : "Wylacz muzyke";
 }
 
 function toggleMusic() {
@@ -536,10 +543,10 @@ function buyAutoUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_auto_level').innerText = data.upgrade_auto_level;
-        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost;
+        document.getElementById('auto_upgrade_cost').innerText = data.auto_upgrade_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -562,10 +569,10 @@ function buyDrunkUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_drunk_level').innerText = data.upgrade_drunk_level;
-        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost;
+        document.getElementById('upgrade_drunk_cost').innerText = data.upgrade_drunk_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -587,10 +594,10 @@ function buyMaidUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_maid_level').innerText = data.upgrade_maid_level;
-        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost;
+        document.getElementById('upgrade_maid_cost').innerText = data.upgrade_maid_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -613,10 +620,10 @@ function buyGroomUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_groom_level').innerText = data.upgrade_groom_level;
-        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost;
+        document.getElementById('upgrade_groom_cost').innerText = data.upgrade_groom_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -639,10 +646,10 @@ function buyJesterUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_jester_level').innerText = data.upgrade_jester_level;
-        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost;
+        document.getElementById('upgrade_jester_cost').innerText = data.upgrade_jester_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -664,10 +671,10 @@ function buyPriestUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_priest_level').innerText = data.upgrade_priest_level;
-        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost;
+        document.getElementById('upgrade_priest_cost').innerText = data.upgrade_priest_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -689,10 +696,10 @@ function buyArcherUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_archer_level').innerText = data.upgrade_archer_level;
-        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost;
+        document.getElementById('upgrade_archer_cost').innerText = data.upgrade_archer_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -714,10 +721,10 @@ function buyKnightUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_knight_level').innerText = data.upgrade_knight_level;
-        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost;
+        document.getElementById('upgrade_knight_cost').innerText = data.upgrade_knight_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -739,10 +746,10 @@ function buyCavalryUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_cavalry_level').innerText = data.upgrade_cavalry_level;
-        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost;
+        document.getElementById('upgrade_cavalry_cost').innerText = data.upgrade_cavalry_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -764,10 +771,10 @@ function buyArchitectUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_architect_level').innerText = data.upgrade_architect_level;
-        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost;
+        document.getElementById('upgrade_architect_cost').innerText = data.upgrade_architect_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -790,10 +797,10 @@ function buyBaronUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_baron_level').innerText = data.upgrade_baron_level;
-        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost;
+        document.getElementById('upgrade_baron_cost').innerText = data.upgrade_baron_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -815,10 +822,10 @@ function buyKingUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_king_level').innerText = data.upgrade_king_level;
-        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost;
+        document.getElementById('upgrade_king_cost').innerText = data.upgrade_king_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -841,10 +848,10 @@ function buyPopeUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('points_per_second').innerText = data.points_per_second;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('points_per_second').innerText = data.points_per_second.toFixed(2);
         document.getElementById('upgrade_pope_level').innerText = data.upgrade_pope_level;
-        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost;
+        document.getElementById('upgrade_pope_cost').innerText = data.upgrade_pope_cost.toFixed(2);
         document.getElementById('player_level').innerText = data.player_level;
 
         updateUpgradeLocks();
@@ -866,9 +873,9 @@ function buyCritUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('crit_chance').innerText = data.crit_chance;
-        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('crit_chance').innerText = data.crit_chance.toFixed(2);
+        document.getElementById('crit_chance_upgrade_cost').innerText = data.crit_chance_upgrade_cost.toFixed(2);
         document.getElementById('upgrade_crit_chance_level').innerText = data.upgrade_crit_chance_level;
 
         updateTitle(data.points);
@@ -890,9 +897,9 @@ function buyMultiplierUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('crit_multiplier').innerText = data.crit_multiplier;
-        document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('crit_multiplier').innerText = data.crit_multiplier.toFixed(2);
+        document.getElementById('crit_multiplier_upgrade_cost').innerText = data.crit_multiplier_upgrade_cost.toFixed(2);
         document.getElementById('upgrade_crit_multiplier_level').innerText = data.upgrade_crit_multiplier_level;
 
         updateTitle(data.points);
@@ -914,10 +921,10 @@ function buyLuckUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('luck').innerText = data.luck;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('luck').innerText = data.luck.toFixed(2);
         document.getElementById('upgrade_luck_level').innerText = data.upgrade_luck_level;
-        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost;
+        document.getElementById('upgrade_luck_cost').innerText = data.upgrade_luck_cost.toFixed(2);
 
         updateTitle(data.points);
 
@@ -938,10 +945,10 @@ function buyTimeOfflineUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
+        document.getElementById('points').innerText = data.points.toFixed(2);
         document.getElementById('time_offline').innerText = data.time_offline;
         document.getElementById('upgrade_time_offline_level').innerText = data.upgrade_time_offline_level;
-        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost;
+        document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost.toFixed(2);
 
         updateTitle(data.points);
 
@@ -962,10 +969,10 @@ function buyShekelMultiplierUpgrade() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('points').innerText = data.points;
-        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier;
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier.toFixed(2);
         document.getElementById('upgrade_shekel_multiplier_level').innerText = data.upgrade_shekel_multiplier_level;
-        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost;
+        document.getElementById('upgrade_shekel_multiplier_cost').innerText = data.upgrade_shekel_multiplier_cost.toFixed(2);
 
         updateTitle(data.points);
 
@@ -976,14 +983,14 @@ function buyShekelMultiplierUpgrade() {
 }
 
 setInterval(() => {
-    const points_per_second = parseInt(document.getElementById("points_per_second").innerText);
+    const points_per_second = parseFloat(document.getElementById("points_per_second").innerText);
     const pointsEl = document.getElementById("points");
 
-    let currentPoints = parseInt(pointsEl.innerText);
+    let currentPoints = parseFloat(pointsEl.innerText);
 
     currentPoints += points_per_second;
 
-    pointsEl.innerText = currentPoints;
+    pointsEl.innerText = currentPoints.toFixed(2);
 
     updateTitle(currentPoints);
 }, 1000);
@@ -994,10 +1001,10 @@ function createFloatingText(x, y, value, isCrit = false) {
     text.classList.add("floating-text");
 
     if (isCrit) {
-        text.innerText = "💥 CRIT! +" + value;
+        text.innerText = "💥 CRIT! +" + Number(value).toFixed(2);
         text.classList.add("crit");
     } else {
-        text.innerText = "+" + value;
+        text.innerText = "+" + Number(value).toFixed(2);
     }
 
     text.style.left = x + "px";
