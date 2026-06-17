@@ -45,7 +45,8 @@ class Player(models.Model):
     upgrade_tax_cost = models.FloatField(default=1000.0)
     upgrade_tax_level = models.IntegerField(default=0)
 
-    anchor = models.FloatField(default=10000.0)
+    anchor = models.FloatField(default=1000.0)
+    anchor_click = models.IntegerField(default=100)
     upgrade_anchor_cost = models.FloatField(default=3000.0)
     upgrade_anchor_level = models.IntegerField(default=0)
 

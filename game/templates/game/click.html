@@ -81,7 +81,11 @@
         kliki: <span id="anchor">{{ player.anchor }}</span>
             <span class="tooltip">⚓
                 <span class="tooltip-text">
-                    Co tyle klikniec otrzymasz dodatkowy bonus w ilosci
+                    Co 100 klikniec otrzymasz dodatkowy bonus w takiej ilosci<br>
+                        Postep:
+                            <span id="anchor_click">
+                                {{ player.anchor_click }}
+                            </span> / 100
                 </span>
             </span>
 
@@ -446,7 +450,7 @@
                 <img src="{% static 'game/images/anchor.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_anchor_level">{{ player.upgrade_anchor_level }}</span></p>
-                <p>Klikniecia (-1000 ⚓)</p>
+                <p>Klikniecia (x3 ⚓)</p>
 
                 <button onclick="buyAnchorUpgrade()"><span id="upgrade_anchor_cost">{{ player.upgrade_anchor_cost }} </span> szekli</button>
             </div>
@@ -502,6 +506,10 @@
 
     <audio id="crit_sound">
         <source src="{% static 'game/crit.mp3' %}" type="audio/mpeg">
+    </audio>
+
+    <audio id="anchor_sound">
+        <source src="{% static 'game/anchor.mp3' %}" type="audio/mpeg">
     </audio>
     
 

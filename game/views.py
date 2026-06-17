@@ -67,6 +67,15 @@ def click_ajax(request):
             player.player_total_clicks += 1
             player.player_total_both_earned += gained_points
 
+            player.anchor_click += 1
+            anchor_bonus = 0
+
+            if player.anchor_click >= 100:
+                player.anchor_click = 0
+                anchor_bonus = player.anchor * player.shekel_multiplier
+                player.points += anchor_bonus
+
+
             player.save()
 
         return JsonResponse({
@@ -75,6 +84,9 @@ def click_ajax(request):
             'gained_points': gained_points,
             'is_crit': is_crit,
             'crit_multiplier': player.crit_multiplier,
+            'anchor': player.anchor,
+            'anchor_click': player.anchor_click,
+            'anchor_bonus': anchor_bonus,
         })
 
 
@@ -411,7 +423,7 @@ def reset_game(request):
         player.upgrade_tax_cost = 1000.0
         player.upgrade_tax_level = 0
 
-        player.anchor = 10000.0
+        player.anchor = 1000.0
         player.upgrade_anchor_cost = 3000.0
         player.upgrade_anchor_level = 0
 
@@ -951,4 +963,23 @@ def buy_shekel_multiplier_upgrade(request):
             'shekel_multiplier': player.shekel_multiplier,
             'upgrade_shekel_multiplier_level': player.upgrade_shekel_multiplier_level,
             'upgrade_shekel_multiplier_cost': player.upgrade_shekel_multiplier_cost
+        })
+
+
+def buy_anchor_upgrade(request):
+    if request.method == "POST":
+        player = Player.objects.first()
+
+        if player.points >= player.upgrade_anchor_cost:
+            player.points -= player.upgrade_anchor_cost
+            player.upgrade_anchor_level += 1
+            player.anchor *= 3
+            player.upgrade_anchor_cost *= 5
+            player.save()
+
+        return JsonResponse({
+            'points': player.points,
+            'anchor': player.anchor,
+            'upgrade_anchor_level': player.upgrade_anchor_level,
+            'upgrade_anchor_cost': player.upgrade_anchor_cost
         })

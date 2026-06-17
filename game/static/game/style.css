@@ -65,22 +65,22 @@ body.dark ::-webkit-scrollbar-track {
 .click_upgrades {
     display: flex;
     gap: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     overflow-x: auto;
     overflow-y: hidden;
     flex-wrap: nowrap;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 
 .sps_upgrades {
     display: flex;
     gap: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     overflow-x: auto;
     overflow-y: hidden;
     flex-wrap: nowrap;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 .other_upgrades {
@@ -206,14 +206,22 @@ h1 {
     color: gold;
     font-weight: bold;
     pointer-events: none;
-    animation: floatUp 1s ease-out forwards;
+    animation: floatUp 1.0s ease-out forwards;
     z-index: 9999; 
 }
+
 
 .floating-text.crit {
     color: red !important;
     font-size: 48px;
 }
+
+
+.floating-text.anchor {
+    color: skyblue !important;
+    font-size: 48px;
+}
+
 
 @keyframes floatUp {
     0% {
@@ -251,8 +259,18 @@ body.dark .weapon-image {
     min-width: 200px; 
 }
 
+.upgrade-block p {
+    margin-bottom: 2px;
+    margin-top: 5px;
+}
+
 .crit-block {
     padding: 10px 0;
+}
+
+.crit-block p {
+    margin-bottom: 2px;
+    margin-top: 5px;
 }
 
 .lock-overlay {

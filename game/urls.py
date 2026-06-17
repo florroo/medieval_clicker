@@ -40,6 +40,8 @@ urlpatterns = [
     path('buy-luck/', views.buy_luck_upgrade, name='buy_luck_upgrade'),
     path('buy-time-offline/', views.buy_time_offline_upgrade, name='buy_time_offline_upgrade'),
     path('buy-shekel-multiplier/', views.buy_shekel_multiplier_upgrade, name='buy_shekel_multiplier_upgrade'),
+    path('buy-anchor/', views.buy_anchor_upgrade, name='buy_anchor_upgrade'),
 
+    
     # path('boss-hit/', views.boss_hit, name='boss_hit'),
 ]

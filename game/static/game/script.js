@@ -64,8 +64,21 @@ function sendClick(event) {
     .then(response => response.json())
     .then(data => {
         document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('anchor_click').innerText = data.anchor_click;
         updateTitle(data.points);
 
+        if(data.anchor_bonus > 0 ) {
+            const anchorSound = document.getElementById("anchor_sound");
+            anchorSound.currentTime = 0;
+            anchorSound.play().catch(err => console.log(err));
+            createFloatingText(
+                event.pageX,
+                event.pageY,
+                data.anchor_bonus,
+                "anchor"
+            );
+        }
+        
         if (data.is_crit) {
             const critSound = document.getElementById("crit_sound");
             critSound.currentTime = 0;
@@ -78,7 +91,7 @@ function sendClick(event) {
             event.pageX,
             event.pageY,
             data.gained_points,
-            data.is_crit
+            data.is_crit ? "crit" : "normal"
         );
     });
 }
@@ -377,6 +390,11 @@ function resetGame() {
         document.getElementById('luck').innerText = data.luck.toFixed(2);
         document.getElementById('time_offline').innerText = data.time_offline;
         document.getElementById('shekel_multiplier').innerText = data.shekel_multiplier.toFixed(2);
+        document.getElementById('anchor').innerText = data.anchor.toFixed(2);
+        document.getElementById('anchor_click').innerText = data.anchor_click;
+
+        document.getElementById('upgrade_anchor_cost').innerText = data.upgrade_anchor_cost.toFixed(2);
+        document.getElementById('upgrade_anchor_level').innerText = data.upgrade_anchor_level;
 
         document.getElementById('upgrade_time_offline_cost').innerText = data.upgrade_time_offline_cost.toFixed(2);
         document.getElementById('upgrade_time_offline_level').innerText = data.upgrade_time_offline_level;
@@ -982,6 +1000,29 @@ function buyShekelMultiplierUpgrade() {
     });
 }
 
+function buyAnchorUpgrade() {
+    fetch('/buy-anchor/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('points').innerText = data.points.toFixed(2);
+        document.getElementById('anchor').innerText = data.anchor.toFixed(2);
+        document.getElementById('upgrade_anchor_level').innerText = data.upgrade_anchor_level;
+        document.getElementById('upgrade_anchor_cost').innerText = data.upgrade_anchor_cost.toFixed(2);
+
+        updateTitle(data.points);
+
+        const upgradeSound = document.getElementById("upgrade_sound");
+        upgradeSound.currentTime = 0;
+        upgradeSound.play().catch(err => console.log(err));
+    });
+}
+
 setInterval(() => {
     const points_per_second = parseFloat(document.getElementById("points_per_second").innerText);
     const pointsEl = document.getElementById("points");
@@ -996,15 +1037,20 @@ setInterval(() => {
 }, 1000);
 
 
-function createFloatingText(x, y, value, isCrit = false) {
+function createFloatingText(x, y, value, type = "normal") {
     const text = document.createElement("span");
     text.classList.add("floating-text");
 
-    if (isCrit) {
-        text.innerText = "💥 CRIT! +" + Number(value).toFixed(2);
+    num = Number(value).toFixed(2)
+
+    if (type === "crit") {
+        text.innerText = "💥 CRIT! +" + num;
         text.classList.add("crit");
+    } else if (type === "anchor") {
+        text.innerText = "⚓ +" + num;
+        text.classList.add("anchor");
     } else {
-        text.innerText = "+" + Number(value).toFixed(2);
+        text.innerText = "+" + num;
     }
 
     text.style.left = x + "px";
