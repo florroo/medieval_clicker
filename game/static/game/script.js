@@ -1041,7 +1041,7 @@ function createFloatingText(x, y, value, type = "normal") {
     const text = document.createElement("span");
     text.classList.add("floating-text");
 
-    num = Number(value).toFixed(2)
+    const num = Number(value).toFixed(2);
 
     if (type === "crit") {
         text.innerText = "💥 CRIT! +" + num;
@@ -1056,13 +1056,18 @@ function createFloatingText(x, y, value, type = "normal") {
     text.style.left = x + "px";
     text.style.top = y + "px";
 
+    const rotation = Math.random() * 60 - 30;
+    const driftX = Math.random() * 100 - 50;
+
+    text.style.setProperty('--rotation', rotation + 'deg');
+    text.style.setProperty('--driftX', driftX + 'px');
+
     document.body.appendChild(text);
 
     setTimeout(() => {
         text.remove();
     }, 1000);
 }
-
 
 
 function updateUpgradeLocks() {

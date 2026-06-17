@@ -33,7 +33,7 @@ class Player(models.Model):
     upgrade_shekel_multiplier_cost = models.FloatField(default=500.0)
     upgrade_shekel_multiplier_level = models.IntegerField(default=0)
 
-    crit_chance = models.FloatField(default=1.0)
+    crit_chance = models.FloatField(default=0.0)
     crit_chance_upgrade_cost = models.FloatField(default=100.0)
     upgrade_crit_chance_level = models.IntegerField(default=0)
 

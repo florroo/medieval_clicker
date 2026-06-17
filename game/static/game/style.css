@@ -206,10 +206,9 @@ h1 {
     color: gold;
     font-weight: bold;
     pointer-events: none;
-    animation: floatUp 1.0s ease-out forwards;
-    z-index: 9999; 
+    animation: floatRandom 1s ease-out forwards;
+    z-index: 9999;
 }
-
 
 .floating-text.crit {
     color: red !important;
@@ -223,14 +222,23 @@ h1 {
 }
 
 
-@keyframes floatUp {
+@keyframes floatRandom {
     0% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(calc(var(--driftX) * 0.3), -20px)
+                   rotate(calc(var(--rotation) * 0.3));
+    }
+    50% {
+        transform: translate(calc(var(--driftX) * 0.7), -45px)
+                   rotate(calc(var(--rotation) * 0.7));
     }
     100% {
         opacity: 0;
-        transform: translateY(-50px);
+        transform: translate(var(--driftX), -80px)
+                   rotate(var(--rotation));
     }
 }
 

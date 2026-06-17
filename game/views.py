@@ -425,6 +425,7 @@ def reset_game(request):
 
         player.anchor = 1000.0
         player.upgrade_anchor_cost = 3000.0
+        player.anchor_click = 0
         player.upgrade_anchor_level = 0
 
         player.dragon_multiplier = 1.0
@@ -472,7 +473,7 @@ def reset_game(request):
         player.upgrade_warhammer_level = 0
 
         # crit system
-        player.crit_chance = 1.0
+        player.crit_chance = 0.0
         player.crit_chance_upgrade_cost = 100.0
         player.upgrade_crit_chance_level = 0
 
@@ -547,6 +548,7 @@ def reset_game(request):
 
             'anchor': player.anchor,
             'upgrade_anchor_cost': player.upgrade_anchor_cost,
+            'anchor_click': player.anchor_click,
             'upgrade_anchor_level': player.upgrade_anchor_level,
 
             'dragon_multiplier': player.dragon_multiplier,
@@ -667,10 +669,12 @@ def buy_crit_chance_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.crit_chance_upgrade_cost:
+        MAX_CRIT_LEVEL = 20
+
+        if (player.points >= player.crit_chance_upgrade_cost and player.upgrade_crit_chance_level < MAX_CRIT_LEVEL):
             player.points -= player.crit_chance_upgrade_cost
             player.upgrade_crit_chance_level += 1
-            player.crit_chance += 1 
+            player.crit_chance += 1
             player.crit_chance_upgrade_cost *= 2
             player.save()
 
@@ -678,7 +682,8 @@ def buy_crit_chance_upgrade(request):
             'points': player.points,
             'upgrade_crit_chance_level': player.upgrade_crit_chance_level,
             'crit_chance': player.crit_chance,
-            'crit_chance_upgrade_cost': player.crit_chance_upgrade_cost
+            'crit_chance_upgrade_cost': player.crit_chance_upgrade_cost,
+            'max_crit_level': MAX_CRIT_LEVEL,
         })
 
 
@@ -686,7 +691,9 @@ def buy_crit_multiplier_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.crit_multiplier_upgrade_cost:
+        MAX_CRIT_MULTIPLIER_LEVEL = 13
+
+        if (player.points >= player.crit_multiplier_upgrade_cost and player.upgrade_crit_multiplier_level < MAX_CRIT_MULTIPLIER_LEVEL):
             player.points -= player.crit_multiplier_upgrade_cost
             player.upgrade_crit_multiplier_level += 1
             player.crit_multiplier += 1
@@ -697,7 +704,8 @@ def buy_crit_multiplier_upgrade(request):
             'points': player.points,
             'crit_multiplier': player.crit_multiplier,
             'upgrade_crit_multiplier_level': player.upgrade_crit_multiplier_level,
-            'crit_multiplier_upgrade_cost': player.crit_multiplier_upgrade_cost
+            'crit_multiplier_upgrade_cost': player.crit_multiplier_upgrade_cost,
+            'max_crit_multiplier_level': MAX_CRIT_MULTIPLIER_LEVEL,
         })
 
 
@@ -913,7 +921,9 @@ def buy_luck_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.upgrade_luck_cost:
+        MAX_LUCK_LEVEL = 25
+
+        if (player.points >= player.upgrade_luck_cost and player.upgrade_luck_level < MAX_LUCK_LEVEL):
             player.points -= player.upgrade_luck_cost
             player.upgrade_luck_level += 1
             player.luck += 1.0
@@ -924,7 +934,8 @@ def buy_luck_upgrade(request):
             'points': player.points,
             'luck': player.luck,
             'upgrade_luck_level': player.upgrade_luck_level,
-            'upgrade_luck_cost': player.upgrade_luck_cost
+            'upgrade_luck_cost': player.upgrade_luck_cost,
+            'max_luck_level': MAX_LUCK_LEVEL,
         })
 
 
@@ -932,7 +943,9 @@ def buy_time_offline_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.upgrade_time_offline_cost:
+        MAX_OFFLINE_LEVEL = 12
+
+        if (player.points >= player.upgrade_time_offline_cost and player.upgrade_time_offline_level < MAX_OFFLINE_LEVEL):
             player.points -= player.upgrade_time_offline_cost
             player.upgrade_time_offline_level += 1
             player.time_offline += 1
@@ -943,7 +956,8 @@ def buy_time_offline_upgrade(request):
             'points': player.points,
             'time_offline': player.time_offline,
             'upgrade_time_offline_level': player.upgrade_time_offline_level,
-            'upgrade_time_offline_cost': player.upgrade_time_offline_cost
+            'upgrade_time_offline_cost': player.upgrade_time_offline_cost,
+            'max_offline_level': MAX_OFFLINE_LEVEL,
         })
 
 
@@ -951,7 +965,9 @@ def buy_shekel_multiplier_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.upgrade_shekel_multiplier_cost:
+        MAX_SHEKEL_LEVEL = 30
+
+        if (player.points >= player.upgrade_shekel_multiplier_cost and player.upgrade_shekel_multiplier_level < MAX_SHEKEL_LEVEL):
             player.points -= player.upgrade_shekel_multiplier_cost
             player.upgrade_shekel_multiplier_level += 1
             player.shekel_multiplier += 0.1
@@ -962,7 +978,8 @@ def buy_shekel_multiplier_upgrade(request):
             'points': player.points,
             'shekel_multiplier': player.shekel_multiplier,
             'upgrade_shekel_multiplier_level': player.upgrade_shekel_multiplier_level,
-            'upgrade_shekel_multiplier_cost': player.upgrade_shekel_multiplier_cost
+            'upgrade_shekel_multiplier_cost': player.upgrade_shekel_multiplier_cost,
+            'max_shekel_level': MAX_SHEKEL_LEVEL,
         })
 
 
@@ -970,7 +987,9 @@ def buy_anchor_upgrade(request):
     if request.method == "POST":
         player = Player.objects.first()
 
-        if player.points >= player.upgrade_anchor_cost:
+        MAX_ANCHOR_LEVEL = 10
+
+        if (player.points >= player.upgrade_anchor_cost and player.upgrade_anchor_level < MAX_ANCHOR_LEVEL):
             player.points -= player.upgrade_anchor_cost
             player.upgrade_anchor_level += 1
             player.anchor *= 3
@@ -981,5 +1000,6 @@ def buy_anchor_upgrade(request):
             'points': player.points,
             'anchor': player.anchor,
             'upgrade_anchor_level': player.upgrade_anchor_level,
-            'upgrade_anchor_cost': player.upgrade_anchor_cost
+            'upgrade_anchor_cost': player.upgrade_anchor_cost,
+            'max_anchor_level': MAX_ANCHOR_LEVEL,
         })

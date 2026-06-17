@@ -78,7 +78,7 @@
                 </span>
             </span>
 
-        kliki: <span id="anchor">{{ player.anchor }}</span>
+        kotwica: <span id="anchor">{{ player.anchor }}</span>
             <span class="tooltip">⚓
                 <span class="tooltip-text">
                     Co 100 klikniec otrzymasz dodatkowy bonus w takiej ilosci<br>
@@ -382,47 +382,93 @@
             <div class="crit_upgrade crit-block">
                 <img src="{% static 'game/images/dice.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_crit_chance_level">{{ player.upgrade_crit_chance_level }}</span></p>
+                <p>Obecny poziom: <span id="upgrade_crit_chance_level">{{ player.upgrade_crit_chance_level }}</span>/20</p>
                 <p>Wiekszy kryt (+1% 🎲)</p>
 
-                <button onclick="buyCritUpgrade()"><span id="crit_chance_upgrade_cost">{{ player.crit_chance_upgrade_cost }} </span> szekli</button>
+                {% if player.upgrade_crit_chance_level >= 20 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyCritUpgrade()">
+                        <span id="crit_chance_upgrade_cost">
+                            {{ player.crit_chance_upgrade_cost }}
+                        </span>
+                        szekli
+                    </button>
+                {% endif %}
             </div>
 
 
             <div class="multiplier_upgrade crit-block">
                 <img src="{% static 'game/images/dinamite.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_crit_multiplier_level">{{ player.upgrade_crit_multiplier_level }}</span></p>
+                <p>Obecny poziom: <span id="upgrade_crit_multiplier_level">{{ player.upgrade_crit_multiplier_level }}</span>/13</p>
                 <p>Mocniejszy kryt (+1x 🧨)</p>
 
-                <button onclick="buyMultiplierUpgrade()"><span id="crit_multiplier_upgrade_cost">{{ player.crit_multiplier_upgrade_cost }} </span> szekli</button>
+                {% if player.upgrade_crit_multiplier_level >= 13 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyMultiplierUpgrade()">
+                        <span id="crit_multiplier_upgrade_cost">
+                            {{ player.crit_multiplier_upgrade_cost }}
+                        </span> 
+                        szekli
+                    </button>
+                {% endif %}
             </div>
 
             <div class="luck_upgrade crit-block">
                 <img src="{% static 'game/images/luck.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_luck_level">{{ player.upgrade_luck_level }}</span></p>
-                <p>Wiekszy luck (+1 🍀)</p>
+                <p>Obecny poziom: <span id="upgrade_luck_level">{{ player.upgrade_luck_level }}</span>/25</p>
+                <p>Zwieksz luck (+1 🍀)</p>
 
-                <button onclick="buyLuckUpgrade()"><span id="upgrade_luck_cost">{{ player.upgrade_luck_cost }} </span> szekli</button>
+                {% if player.upgrade_luck_level >= 25 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyLuckUpgrade()">
+                        <span id="upgrade_luck_cost">
+                            {{ player.upgrade_luck_cost }}
+                        </span> 
+                        szekli
+                    </button>
+                {% endif %}
             </div>
 
             <div class="time_offline_upgrade crit-block">
                 <img src="{% static 'game/images/offline.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_time_offline_level">{{ player.upgrade_time_offline_level }}</span></p>
-                <p>Wiekszy czas (+1 🌙)</p>
+                <p>Obecny poziom: <span id="upgrade_time_offline_level">{{ player.upgrade_time_offline_level }}</span>/12</p>
+                <p>Dluzszy czas (+1h 🌙)</p>
 
-                <button onclick="buyTimeOfflineUpgrade()"><span id="upgrade_time_offline_cost">{{ player.upgrade_time_offline_cost }} </span> szekli</button>
+                {% if player.upgrade_time_offline_level >= 12 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyTimeOfflineUpgrade()">
+                        <span id="upgrade_time_offline_cost">
+                            {{ player.upgrade_time_offline_cost }}
+                        </span> 
+                        szekli
+                    </button>
+                {% endif %}
             </div>
+
 
             <div class="shekel_multiplier_upgrade crit-block">
                 <img src="{% static 'game/images/shekel_multiplier.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_shekel_multiplier_level">{{ player.upgrade_shekel_multiplier_level }}</span></p>
-                <p>Wiekszy mnoznik (+0.1x 💲)</p>
+                <p>Obecny poziom: <span id="upgrade_shekel_multiplier_level">{{ player.upgrade_shekel_multiplier_level }}</span>/30</p>
+                <p>Mnoznik (+0.1x 💲)</p>
 
-                <button onclick="buyShekelMultiplierUpgrade()"><span id="upgrade_shekel_multiplier_cost">{{ player.upgrade_shekel_multiplier_cost }} </span> szekli</button>
+                {% if player.upgrade_shekel_multiplier_level >= 30 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyShekelMultiplierUpgrade()">
+                        <span id="upgrade_shekel_multiplier_cost">
+                            {{ player.upgrade_shekel_multiplier_cost }}
+                        </span> 
+                        szekli
+                    </button>
+                {% endif %}
             </div>
 
 
@@ -434,13 +480,13 @@
 
                 <button onclick="buyDragonMultiplierUpgrade()"><span id="upgrade_dragon_multiplier_cost">{{ player.upgrade_dragon_multiplier_cost }} </span> szekli</button>
             </div>
-            
+
 
             <div class="tax_upgrade crit-block">
                 <img src="{% static 'game/images/tax.png' %}" class="weapon-image">
 
                 <p>Obecny poziom: <span id="upgrade_tax_level">{{ player.upgrade_tax_level }}</span></p>
-                <p>Wiecej kasy ( 👑)</p>
+                <p>Podatek ( 👑)</p>
 
                 <button onclick="buyTaxUpgrade()"><span id="upgrade_tax_cost">{{ player.upgrade_tax_cost }} </span> szekli</button>
             </div>
@@ -449,10 +495,20 @@
             <div class="anchor_upgrade crit-block">
                 <img src="{% static 'game/images/anchor.png' %}" class="weapon-image">
 
-                <p>Obecny poziom: <span id="upgrade_anchor_level">{{ player.upgrade_anchor_level }}</span></p>
-                <p>Klikniecia (x3 ⚓)</p>
+                <p>Obecny poziom: <span id="upgrade_anchor_level">{{ player.upgrade_anchor_level }}</span>/10</p>
+                <p>Przychod (x3 ⚓)</p>
 
-                <button onclick="buyAnchorUpgrade()"><span id="upgrade_anchor_cost">{{ player.upgrade_anchor_cost }} </span> szekli</button>
+
+                {% if player.upgrade_anchor_level >= 10 %}
+                    <button disabled>MAX POZIOM</button>
+                {% else %}
+                    <button onclick="buyAnchorUpgrade()">
+                        <span id="upgrade_anchor_cost">
+                            {{ player.upgrade_anchor_cost }}
+                        </span> 
+                        szekli
+                    </button>
+                {% endif %}
             </div>
 
         </div>
